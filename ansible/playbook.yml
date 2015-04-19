@@ -1,0 +1,7 @@
+---
+- hosts: 127.0.0.1
+  sudo: true
+  tasks:
+    - shell: curl -sL https://deb.nodesource.com/setup_0.12 | sudo bash -
+    - name: Install Node
+      apt: name=nodejs state=latest

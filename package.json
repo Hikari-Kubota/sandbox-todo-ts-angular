@@ -1,33 +1,36 @@
 {
-  "name": "sample-todo-ts-angular",
-  "version": "0.0.1",
-  "description": "my sandbox.",
-  "scripts": {
-    "postinstall": "dtsm install",
-    "build:js": "tsc -p ./",
-    "build:css": "node-sass --output-style compressed src/styles/style.scss dist/style.css",
-    "build": "npm run build:js && npm run build:css",
-    "watch:js": "watch 'npm run build:js' src/scripts/",
-    "watch:css": "watch 'npm run build:css' src/styles/",
-    "watch": "npm run watch:js & npm run watch:css"
-  },
-  "author": {
-    "name": "yukiyo",
-    "email": "yuki@giamnote.net"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/yukink/sample-todo-ts-angular"
-  },
-  "license": "MIT",
-  "dependencies": {
-    "angular": "^1.4.0-rc.0",
-    "bootstrap": "^3.3.4"
-  },
-  "devDependencies": {
-    "dtsm": "^0.9.1",
-    "node-sass": "^2.1.1",
-    "typescript": "^1.5.0-alpha",
-    "watch": "^0.16.0"
-  }
+    "name": "sandbox-todo-ts-angular",
+    "version": "0.0.1",
+    "description": "my sandbox.",
+    "scripts": {
+        "postinstall": "dtsm install",
+        "build:js": "tsc -p ./",
+        "build:css": "node-sass --output-style compressed src/styles/style.scss dist/style.css",
+        "build:html": "jade -P src/markups/index.jade --out ./",
+        "build": "npm run build:js && npm run build:css && npm run build:html",
+        "watch:js": "watch 'npm run build:js' src/scripts/",
+        "watch:css": "watch 'npm run build:css' src/styles/",
+        "watch:html": "watch 'npm run build:html' src/markups/",
+        "watch": "npm run watch:js & npm run watch:css & npm run watch:html"
+    },
+    "author": {
+        "name": "yukiyo",
+        "email": "yuki@giamnote.net"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/yukink/sandbox-todo-ts-angular"
+    },
+    "license": "MIT",
+    "dependencies": {
+        "angular": "^1.4.0-rc.0",
+        "bootstrap": "^3.3.4"
+    },
+    "devDependencies": {
+        "dtsm": "^0.9.1",
+        "jade": "^1.9.2",
+        "node-sass": "^2.1.1",
+        "typescript": "^1.5.0-alpha",
+        "watch": "^0.16.0"
+    }
 }

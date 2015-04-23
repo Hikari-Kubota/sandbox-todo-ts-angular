@@ -4,14 +4,17 @@ my sandbox.
 
 ## Installation
 1. [Vagrant](https://www.vagrantup.com/) と [VirtualBox](https://www.virtualbox.org/) をインストール
+
 2. Vagrant を起動する  
 ```shell
 $ vagrant up
 ```
+
 3. 起動したら Vagrant に接続する
 ```shell
 $ vagrant ssh
 ```
+
 4. いろいろインストール
 ```shell
 $ cd /vagrant

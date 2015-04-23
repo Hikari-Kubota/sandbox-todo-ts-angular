@@ -1,2 +1,4 @@
-///　<reference path="typings/bundle.d.ts" />
-// ここに依存するファイルのパスを追加する
+/// <reference path="typings/bundle.d.ts" />
+/// <reference path="_vendor.d.ts" />
+
+// コードを書く

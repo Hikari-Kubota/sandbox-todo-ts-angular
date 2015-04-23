@@ -4,7 +4,7 @@
   "description": "my sandbox.",
   "scripts": {
     "postinstall": "dtsm install",
-    "build:js": "tsc -d -t es5 --sourceMap --removeComments --out dist/app.js src/scripts/entry.ts",
+    "build:js": "tsc -p ./",
     "build:css": "node-sass --output-style compressed src/styles/style.scss dist/style.css",
     "build": "npm run build:js && npm run build:css",
     "watch:js": "watch 'npm run build:js' src/scripts/",

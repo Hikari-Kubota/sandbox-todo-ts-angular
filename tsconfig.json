@@ -1,10 +1,11 @@
 {
     "compilerOptions": {
-        "declaration": true,
         "target": "es5",
-        "sourceMap": true,
+        "noImplicitAny": true,
         "removeComments": true,
-        "out": "dist/app.js"
+        "preserveConstEnums": true,
+        "out": "dist/app.js",
+        "sourceMap": true
     },
     "files": [
         "src/scripts/entry.ts"

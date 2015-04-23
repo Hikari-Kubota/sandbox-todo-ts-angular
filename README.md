@@ -1,22 +1,17 @@
-# sample-todo-ts-angular
+# sandbox-todo-ts-angular
 
 my sandbox.
 
 ## Installation
-1. [Vagrant](https://www.vagrantup.com/) と [VirtualBox](https://www.virtualbox.org/) をインストール
 
-2. Vagrant を起動する  
+[Vagrant](https://www.vagrantup.com/) と [VirtualBox](https://www.virtualbox.org/) をインストールして、`Vagrantfile` があるディレクトリで以下のコマンドを叩く:
 ```shell
 $ vagrant up
 ```
 
-3. 起動したら Vagrant に接続する
+起動したら仮想マシンに接続して色々インストール:
 ```shell
 $ vagrant ssh
-```
-
-4. いろいろインストール
-```shell
 $ cd /vagrant
 $ npm install
 ```

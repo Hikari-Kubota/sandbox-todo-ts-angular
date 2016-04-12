@@ -2,4 +2,4 @@
 .localized
 .vagrant
 node_modules/
-src/scripts/typings/
+typings/

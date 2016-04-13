@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+<html ng-app>
+<head>
+    <meta charset="utf-8" />
+    <title>ToDo List</title>
+    <script type="text/javascript" src="../angular-1.2.29/angular.js"></script>
+    <script type="text/javascript" src="myscript.js"></script>
+    <link href="mystyle.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <h1>ToDo List</h1>
+    <div ng-controller="mainCtrl">
+        <p>Finished Task: {{getDoneCount()}} / {{tasks.length}}</p>
+        <button ng-click="deleteDone()">Delete Finished</button>
+        <ul>
+            <li ng-repeat="task in tasks">
+                <input type="checkbox" ng-model="task.done" />
+                <span class="done-{{task.done}}">{{task.body}}</span>
+                <a href ng-click="tasks.splice($index,1)">[x]</a>
+            </li>
+        </ul>
+        <form ng-submit="addNew()">
+            <input type="text" ng-model="newTaskBody" />
+            <input type="submit" value="add" />
+        </form>
+    </div>
+</body>
+</html>

@@ -5,6 +5,6 @@ app.constant('ConstValue', {
     value2: 67890
 });
 
-app.constant('ConstFunc', function(a, b){
+app.constant('ConstFunc', function(a, b) {
     return a * b;
 });

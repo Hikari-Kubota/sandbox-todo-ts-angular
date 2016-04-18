@@ -5,6 +5,6 @@ app.value('MyValue', {
     value2: 12345
 });
 
-app.value('MyFunc', function(a, b){
+app.value('MyFunc', function(a, b) {
     return a + b;
 });

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>transclude と replace の組み合わせ</title>
+    <script type="text/javascript" src="../../angular-1.2.29/angular.js"></script>
+    <script type="text/javascript" src="transclude_replace.js"></script>
+</head>
+
+<body ng-app='app' style="margin: 50px;">
+    <h1>transclude と replace の組み合わせ</h1>
+
+    <div ng-init="message='Hello, World!'"></div>
+
+    <h2>transclude:true, replace:false</h2>
+    <transclude-true-replace-false>
+        <pre>msg: {{message}}</pre>
+    </transclude-true-replace-false>
+
+    <h2>transclude:true, replace:true</h2>
+    <transclude-true-replace-true>
+        <pre>msg: {{message}}</pre>
+    </transclude-true-replace-true>
+
+    <h2>transclude:element, replace:false</h2>
+    <transclude-element-replace-false>
+        <pre>msg: {{message}}</pre>
+    </transclude-element-replace-false>
+
+    <h2>transclude:element, replace:true</h2>
+    <transclude-element-replace-true>
+        <pre>msg: {{message}}</pre>
+    </transclude-element-replace-true>
+
+</body>
+
+</html>

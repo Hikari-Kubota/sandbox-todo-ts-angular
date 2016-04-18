@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>transclude関数の利用</title>
+    <script type="text/javascript" src="../../angular-1.2.29/angular.js"></script>
+    <script type="text/javascript" src="transclude_func.js"></script>
+</head>
+
+<body ng-app='app' style="margin: 50px;">
+    <h1>transclude関数の利用</h1>
+
+    <div ng-init="message='Hello, World!'"></div>
+    <transclude-fn>
+        <pre>msg: {{message}}</pre>
+    </transclude-fn>
+
+</body>
+
+</html>

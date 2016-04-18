@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>compile と link</title>
+    <script type="text/javascript" src="../../angular-1.2.29/angular.js"></script>
+    <script type="text/javascript" src="compile_link.js"></script>
+</head>
+
+<body ng-app='app' style="margin: 50px;">
+    <h1>compile と link</h1>
+
+    <div ng-controller="MyController">
+        <div ng-repeat="message in items">
+            <my-directive-compile></my-directive-compile>
+            <my-directive-compile readonly></my-directive-compile>
+            <my-directive-link ng-model="item"></my-directive-link>
+            <my-directive-post-link ng-model="item"></my-directive-post-link>
+            <div my-directive-post-link-only ng-model="item"></div>
+        </div>
+    </div>
+
+</body>
+
+</html>

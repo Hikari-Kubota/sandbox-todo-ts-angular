@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ngModelController</title>
+    <script type="text/javascript" src="../../angular-1.2.29/angular.js"></script>
+    <script type="text/javascript" src="ng_model_controller.js"></script>
+    <style type="text/css">
+        .tax.ng-valid.ng-dirty {
+            border: solid green 2px;
+        }
+        .tax.ng-invalid.ng-dirty {
+            border: solid red 2px;
+        }
+    </style>
+</head>
+
+<body ng-app='app' style="margin: 50px;">
+    <h1>ngModelController</h1>
+
+    <input type="text" ng-model="date">
+    <tax ng-model="date" rate="0.08"></tax>
+</body>
+
+</html>

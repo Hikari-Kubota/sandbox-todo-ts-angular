@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>barGraph</title>
+    <script type="text/javascript" src="../../angular-1.2.29/angular.js"></script>
+    <script type="text/javascript" src="bar_graph.js"></script>
+    <script type="text/javascript" src="d3.v3.min.js"></script>
+</head>
+
+<body ng-app='app' style="margin: 50px;">
+    <a href="../index.html">戻る</a>
+    <h1>barGraph</h1>
+
+    <div ng-controller="graphSampleController">
+      <bar-graph height="200" width="480" data="data"/>
+    </div>
+
+
+</body>
+
+</html>

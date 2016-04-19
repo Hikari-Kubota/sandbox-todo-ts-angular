@@ -4,11 +4,284 @@
 <head>
     <meta charset="UTF-8">
     <title>TypeScript Notes</title>
+    <style type="text/css">
+        .code {
+            padding-left: 10px;
+            margin-top: 10px;
+            border: solid 1px rgb(4, 112, 73);
+            background-color: rgba(4, 112, 73, 0.1);
+            white-space: pre;
+        }
+
+        .log {
+            padding-left: 10px;
+            margin-top: 10px;
+            border: solid 1px rgb(223, 180, 126);
+            background-color: rgba(223, 180, 126, 0.1);
+            white-space: pre;
+        }
+    </style>
 </head>
 
 <body ng-app='app' style="margin: 50px;">
     <a href="../index.html">戻る</a>
     <h1>TypeScript Notes</h1>
+    <p>
+        <a href="https://www.typescriptlang.org/docs/tutorial.html" target="_blank">Quick start &middot; TypeScript</a> を読んだ上でのメモなど。
+    </p>
+    凡例
+    <div class="code" style="width: 150px;">コード or コマンド</div>
+    <div class="log" style="width: 50px;">出力</div>
+
+    <h2>Basic Types</h2>
+    <h3>静的型付け</h3>
+    <div class="code">
+        let isDone: number = 'Hello!';
+    </div>
+    <div class="log">
+        sample.ts(1,5): error TS2322: Type 'string' is not assignable to type 'number'.
+    </div>
+
+    <h3>Tuple</h3>
+    <div class="code">
+        let x: [string, number];
+        x = [10, 'Hello!'];
+    </div>
+    <div class="log">
+        Types of property '0' are incompatible. Type 'number' is not assignable to type 'string'.
+    </div>
+
+    <h3>Enum</h3>
+    <div class="code">
+        enum Color {Red, Green, Blue};
+        let c: Color = Color.Green;
+        console.log(c);
+    </div>
+    <div class="log">
+        1
+    </div>
+
+    <h2>Variable Declarations</h2>
+    <ul>
+        <li>
+            let はローカル変数。
+        </li>
+        <li>
+            const で宣言した連想配列はもちろん後で書き換えられないが、 プロパティなら書き換え可能。
+        </li>
+        <li>
+            初見。
+            <div class="code">
+                let [first, ...rest] = [1, 2, 3, 4];
+            </div>
+        </li>
+    </ul>
+
+    <h2>Interfaces</h2>
+    <ul>
+        <li>
+            動きの確認。
+            <div class="code">
+                interface LabelledValue {
+                    label: string;
+                 }
+
+                 function printLabel(labelledObj: LabelledValue) {
+                 console.log(labelledObj.label);
+                 }
+
+                 let myObj = {size: 10, label: "Size 10 Object"};
+                 printLabel(myObj);
+            </div>
+            <div class="log">
+                Size 10 Object
+            </div>
+        </li>
+        <li>
+            Optional Propaties
+            <div class="code">
+                interface SquareConfig {
+                    color?: string;
+                    width?: number;
+                }
+
+                function createSquare(config: SquareConfig): { color: string; area: number } {
+                    let newSquare = { color: "white", area: 100 };
+                    if (config.color) {
+                        newSquare.color = config.color;
+                    }
+                    if (config.width) {
+                        newSquare.area = config.width * config.width;
+                    }
+                    return newSquare;
+                }
+
+                let mySquare = createSquare({ color: "black" });
+                console.log('color: ' + mySquare.color);
+                console.log('area: ' + mySquare.area);
+            </div>
+            <div class="log">
+                color: black
+                area: 100
+            </div>
+        </li>
+        <li>
+            Function Types
+            <div class="code">
+                interface SearchFunc {
+                    (source: string, subString: string): boolean;   // (仮引数1: 型, 仮引数2: 型): 返り値の型;
+                }
+            </div>
+        </li>
+        <li>
+            Class Types の基本形
+            <div class="code">
+                interface ClockInterface {
+                    currentTime: Date;
+                }
+
+                class Clock implements ClockInterface {
+                    currentTime: Date;
+                    constructor(h: number, m: number) { }
+                }
+            </div>
+        </li>
+        <li>
+            interface の拡張
+            <div class="code">
+                interface Shape {
+                    color: string;
+                }
+
+                interface PenStroke {
+                    penWidth: number;
+                }
+
+                interface Square extends Shape, PenStroke {
+                    sideLength: number;
+                }
+            </div>
+        </li>
+    </ul>
+
+
+    <h2>Classes</h2>
+    <ul>
+        <li>
+            挨拶してもらった。
+            <div class="code">
+                class Greeter {
+                    greeting: string;
+                    constructor(message: string) {
+                        this.greeting = message;
+                    }
+                    greet() {
+                        return "Hello, " + this.greeting;
+                    }
+                }
+
+                let greeter = new Greeter("world");
+
+                console.log(greeter.greet());
+            </div>
+            <div class="log">
+                Hello, World
+            </div>
+        </li>
+        <li>
+            アクセス権は何もしてしなければ public。private はクラス内部からのみ。
+            protected は自身のクラスと、その子クラスからのみ。
+        </li>
+        <li>
+            抽象クラスの扱い
+            <div class="code">
+                abstract class Animal {
+                    private _name: string;
+
+                	constructor(name: string){
+                		this._name = name;
+                	}
+
+                	get name(): string {
+                		return this._name;
+                	}
+                }
+
+                let animal = new Animal('Dog');	// これはダメ
+
+                class Dog extends Animal {
+                	// 何らかの処理
+                }
+
+                let dog = new Dog('Pochi');	// これはOK
+
+                console.log(dog.name);
+            </div>
+            <div class="log">
+                Pochi
+            </div>
+        </li>
+    </ul>
+
+    <h2>Functions</h2>
+    <li>
+        仮引数、返り値の型の指定にはこんな書き方も。
+        <div class="code">
+            let myAdd: (x: number, y: number)=>number =
+                function(x: number, y: number): number { return x+y; };
+
+            /* これはNG */
+            let myAdd: (x: number, y: number)=>number =
+                function(x: number, y: number): number { return 'hello'; };
+        </div>
+    </li>
+    <li>
+        Optional Parameters
+        <div class="code">
+            function buildName(firstName: string, lastName: string) {
+                return firstName + " " + lastName;
+            }
+
+            let result1 = buildName("Bob");                  // これはNG. 実引数が少ない。
+            let result2 = buildName("Bob", "Adams", "Sr.");  // これもNG. 実引数が多い。
+            let result3 = buildName("Bob", "Adams");         // OK.
+        </div>
+        <div class="code">
+            function buildName(firstName: string, lastName?: string) {
+                if (lastName)
+                    return firstName + " " + lastName;
+                else
+                    return firstName;
+            }
+
+            let result1 = buildName("Bob");                  // OK. 第2に引数は optional であるため。
+            let result2 = buildName("Bob", "Adams", "Sr.");  // NG. 多い。
+            let result3 = buildName("Bob", "Adams");         // OK.
+        </div>
+    </li>
+
+    <h2>Generics</h2>
+
+
+    <h2>Enums</h2>
+    <ul>
+        <li>
+            列挙型の要素には、いろいろな演算子を適用した結果を与えられる。
+            <div class="code">
+                enum FileAccess {
+                    // constant members
+                    None,
+                    Read    = 1 << 1,
+                    Write   = 1 << 2,
+                    ReadWrite  = Read | Write,
+                    // computed member
+                    G = "123".length
+                }
+
+                console.log(FileAccess.ReadWrite);
+            </div>
+        </li>
+    </ul>
 
 </body>
 

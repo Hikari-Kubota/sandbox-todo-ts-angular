@@ -274,7 +274,45 @@
     </li>
 
     <h2>Generics</h2>
-    別途資料にまとめる。
+    <ul>
+        <li>
+            引数をそのまま返す関数 identity() を例に。
+            引数、返り値の型が決まっていれば、次のように書けばOK。
+            <div>
+                function identity(arg: number): number {
+                    return arg;
+                }
+            </div>
+        </li>
+        <li>
+            では、型が決まっていなければ……？
+            1つの方法として、型に<b>any</b> を適用してみる。
+            <div class="code">
+                function identity(arg: any): any {
+                    return arg;
+                }
+            </div>
+        </li>
+        <li>
+            一見、上記の書き方で良さそうに思える。しかし、実は関数が値を返す時に型情報を失ってしまう。
+            例えば、identitiy() に number 型の変数を与えても、返ってくるのは any 型である。
+        </li>
+        <li>
+            結論から先に。こんな風に書こう。
+            <div class="code">
+                function identity&lt;T&gt;(arg: T): T {
+                    return arg;
+                }
+            </div>
+            function 関数名&lt;型パラメータ&gt;(引数:型パラメータ):型パラメータ{}
+        </li>
+        <li>
+            そして、こんな感じで使おう。
+            <div class="code">
+                let output = identity<string>("myString");
+            </div>
+        </li>
+    </ul>
 
     <h2>Enums</h2>
     <ul>
@@ -676,7 +714,124 @@
     </li>
 
     <h2>Mixins</h2>
-    別途資料にまとめる。
+    <ul>
+        <li>
+            Mixin サンプルコードの全体
+            <div class="code">
+                // Disposable Mixin
+                class Disposable {
+                    isDisposed: boolean;
+                    dispose() {
+                        this.isDisposed = true;
+                    }
+
+                }
+
+                // Activatable Mixin
+                class Activatable {
+                    isActive: boolean;
+                    activate() {
+                        this.isActive = true;
+                    }
+                    deactivate() {
+                        this.isActive = false;
+                    }
+                }
+
+                class SmartObject implements Disposable, Activatable {
+                    constructor() {
+                        setInterval(() => console.log(this.isActive + " : " + this.isDisposed), 500);
+                    }
+
+                    interact() {
+                        this.activate();
+                    }
+
+                    // Disposable
+                    isDisposed: boolean = false;
+                    dispose: () => void;
+                    // Activatable
+                    isActive: boolean = false;
+                    activate: () => void;
+                    deactivate: () => void;
+                }
+                applyMixins(SmartObject, [Disposable, Activatable]);
+
+                let smartObj = new SmartObject();
+                setTimeout(() => smartObj.interact(), 1000);
+
+                ////////////////////////////////////////
+                // In your runtime library somewhere
+                ////////////////////////////////////////
+
+                function applyMixins(derivedCtor: any, baseCtors: any[]) {
+                    baseCtors.forEach(baseCtor => {
+                        Object.getOwnPropertyNames(baseCtor.prototype).forEach(name => {
+                            derivedCtor.prototype[name] = baseCtor.prototype[name];
+                        });
+                    });
+                }
+            </div>
+        </li>
+        <li>
+            上記のコードを詳しく見ていく。
+            まず、2つの Mixinクラス <b>Disposable</b>, <b>Activatable</b> を用意する。
+            <div class="code">
+                // Disposable Mixin
+                class Disposable {
+                    isDisposed: boolean;
+                    dispose() {
+                        this.isDisposed = true;
+                    }
+
+                }
+
+                // Activatable Mixin
+                class Activatable {
+                    isActive: boolean;
+                    activate() {
+                        this.isActive = true;
+                    }
+                    deactivate() {
+                        this.isActive = false;
+                    }
+                }
+            </div>
+        </li>
+        <li>
+            <b>extends</b> の代わりに <b>implements</b> を使う。
+            クラスをインターフェースとして扱う。
+            <div class="code">
+                class SmartObject implements Disposable, Activatable {
+            </div>
+        </li>
+        <li>
+            クラス内でメンバを宣言。
+            <div class="code">
+                // Disposable
+                isDisposed: boolean = false;
+                dispose: () => void;
+                // Activatable
+                isActive: boolean = false;
+                activate: () => void;
+                deactivate: () => void;
+            </div>
+        </li>
+        <li>
+            mixins と クラスをミックスし、クラスに実装を取り込む。
+            <div class="code">
+                applyMixins(SmartObject, [Disposable, Activatable]);
+
+                function applyMixins(derivedCtor: any, baseCtors: any[]) {
+                    baseCtors.forEach(baseCtor => {
+                        Object.getOwnPropertyNames(baseCtor.prototype).forEach(name => {
+                            derivedCtor.prototype[name] = baseCtor.prototype[name];
+                        });
+                    });
+                }
+            </div>
+        </li>
+    </ul>
 
     <h2>Triple-Slash Directives</h2>
     <ul>
@@ -684,7 +839,7 @@
             ファイルへの参照を埋め込む。
         </li>
         <li>
-            <b>test.d.ts</b> と、これをコンパイルした<b>test.js</b>について考えよう。
+            型定義ファイル<b>test.d.ts</b> と、これをコンパイルした<b>test.js</b>について考えよう。
             前者へは開発者のみがアクセス可能であればよい。
             後者へは実行する誰もがアクセス可能であるべきである。
         </li>
@@ -696,37 +851,3 @@
 </body>
 
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-.

@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <title>TypeScript Notes</title>
     <style type="text/css">
+        li {
+            margin-top: 20px;
+        }
         .code {
             padding-left: 10px;
             margin-top: 10px;
@@ -33,6 +36,7 @@
     <div class="code" style="width: 150px;">コード or コマンド</div>
     <div class="log" style="width: 50px;">出力</div>
 
+    <!-- 4/19 -->
     <h2>Basic Types</h2>
     <h3>静的型付け</h3>
     <div class="code">
@@ -282,6 +286,112 @@
             </div>
         </li>
     </ul>
+
+    <!-- 4/20 -->
+    <h2>Type Inference</h2>
+    <ul>
+        <li>
+            基本的な形。
+            <div class="code">
+                let x = 3;  // この x は number型と推論される。
+            </div>
+        </li>
+    </ul>
+    <h2>Type Compatibility</h2>
+    <ul>
+        <li>
+            型の互換。これはOK。
+            <div class="code">
+                interface Named {
+                    name: string;
+                }
+
+                let x: Named;
+
+                // y's inferred type is { name: string; location: string; }
+                let y = { name: 'Alice', location: 'Seattle' };
+                x = y;
+
+                function greet(n: Named) {
+                    alert('Hello, ' + n.name);
+                }
+                greet(y); // OK.
+            </div>
+        </li>
+        <li>
+            これはNG。
+            <div class="code">
+                interface Named {
+                    name: string;
+                }
+
+                let x: Named;
+
+                // y's inferred type is { name: string; location: string; }
+                let y = { name: 'Alice', location: 'Seattle' };
+                x = y;
+
+                function greet(n: Named) {
+                    alert('Hello, ' + n.name + 'You are in ' + n.location);
+                }
+                greet(y); // Error: 'location' does not exist on type 'Named'.
+            </div>
+        </li>
+        <li>
+            関数の型の比較。
+            <div class="code">
+                let x = (a: number) => 0;
+                let y = (b: number, s: string) => 1;
+
+                y = x; // OK
+                x = y; // Error
+
+                console.log(x);
+                console.log(y);
+            </div>
+            <div class="log">
+                function (a) { return 0; }
+                function (a) { return 0; }
+            </div>
+        </li>
+    </ul>
+    <h2>Advanced Types</h2>
+    <ul>
+        <li>
+            <b>pet is Fish</b> この書き方は初見。
+            <div class="code">
+                // OK.
+                function isFish(pet: Fish | Bird): pet is Fish {
+                    return (<Fish>pet).swim !== undefined;
+                }
+            </div>
+            <div class="code">
+                // NG. Type 'string' is not assignable to type 'boolean'.
+                function isFish(pet: Fish | Bird): pet is Fish {
+                    return 'hoge';
+                }
+            </div>
+        </li>
+        <li>
+            typeof, instanceof で比較できる。Python にも同じようなものが。
+            <div class="code">
+                // e.g.
+                if (typeof padding === "number") {
+                    return ture;
+                }
+
+                // e.g.
+                if (padder instanceof StringPadder) {
+                    padder; // type narrowed to 'StringPadder'
+                }
+            </div>
+        </li>
+    </ul>
+    <h2>Iterators and Generators</h2>
+    <h2>Modules</h2>
+    <h2>Namespaces</h2>
+    <h2>Mixins</h2>
+    <h2>Triple-Slash Directives</h2>
 
 </body>
 

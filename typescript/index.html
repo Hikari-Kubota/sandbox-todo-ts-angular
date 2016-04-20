@@ -28,25 +28,33 @@
 
 <body ng-app='app' style="margin: 50px;">
     <a href="../index.html">戻る</a>
-    <h1>TypeScript Notes</h1>
+    <h1 id="top">TypeScript Notes</h1>
     <p>
         <a href="https://www.typescriptlang.org/docs/tutorial.html" target="_blank">Quick start &middot; TypeScript</a> を読んだ上でのメモなど。
     </p>
     凡例
     <div class="code" style="width: 150px;">コード or コマンド</div>
     <div class="log" style="width: 50px;">出力</div>
-    <ul>
-        参考
-        <li>
-            <a href="http://www.slideshare.net/jsakamoto/type-script-49408371">TypeScript入門 ―素のJavaScriptとはさようなら！―</a>
-        </li>
-        <li>
-            <a href="http://www.buildinsider.net/language/quicktypescript/01">TypeScript早わかりチートシート【1.5.3対応】</a>
-        </li>
-    </ul>
 
+    <h2>INDEX</h2>
+        <a href="#1">Basic Types</a> /
+        <a href="#2">Variable Declarations</a> /
+        <a href="#3">Interfaces</a> /
+        <a href="#4">Classes</a> /
+        <a href="#5">Functions</a> /
+        <a href="#6">Generics</a> /
+        <a href="#7">Enums</a> /
+        <a href="#8">Type Inference</a> /
+        <a href="#9">Type Compatibility</a> /
+        <a href="#10">Advanced Types</a> /
+        <a href="#11">Iterators and Generators</a> /
+        <a href="#12">Modules</a> /
+        <a href="#13">Namespaces</a> /
+        <a href="#14">Mixins</a> /
+        <a href="#15">Triple-Slash Directives</a> /
+        <a href="#16">参考</a>
     <!-- 4/19 -->
-    <h2>Basic Types</h2>
+    <h2 id="1">Basic Types</h2><a href="#top">ページ上部へ</a>
     <h3>静的型付け</h3>
     <div class="code">
         let isDone: number = 'Hello!';
@@ -74,7 +82,7 @@
         1
     </div>
 
-    <h2>Variable Declarations</h2>
+    <h2 id="2">Variable Declarations</h2><a href="#top">ページ上部へ</a>
     <ul>
         <li>
             let はローカル変数。
@@ -90,7 +98,7 @@
         </li>
     </ul>
 
-    <h2>Interfaces</h2>
+    <h2 id="3">Interfaces</h2><a href="#top">ページ上部へ</a>
     <ul>
         <li>
             動きの確認。
@@ -178,7 +186,7 @@
     </ul>
 
 
-    <h2>Classes</h2>
+    <h2 id="4">Classes</h2><a href="#top">ページ上部へ</a>
     <ul>
         <li>
             挨拶してもらった。
@@ -236,7 +244,7 @@
         </li>
     </ul>
 
-    <h2>Functions</h2>
+    <h2 id="5">Functions</h2><a href="#top">ページ上部へ</a>
     <li>
         仮引数、返り値の型の指定にはこんな書き方も。
         <div class="code">
@@ -273,7 +281,7 @@
         </div>
     </li>
 
-    <h2>Generics</h2>
+    <h2 id="6">Generics</h2><a href="#top">ページ上部へ</a>
     <ul>
         <li>
             引数をそのまま返す関数 identity() を例に。
@@ -314,7 +322,7 @@
         </li>
     </ul>
 
-    <h2>Enums</h2>
+    <h2 id="7">Enums</h2><a href="#top">ページ上部へ</a>
     <ul>
         <li>
             列挙型の要素には、いろいろな演算子を適用した結果を与えられる。
@@ -335,7 +343,7 @@
     </ul>
 
     <!-- 4/20 -->
-    <h2>Type Inference</h2>
+    <h2 id="8">Type Inference</h2><a href="#top">ページ上部へ</a>
     <ul>
         <li>
             基本的な形。
@@ -344,7 +352,7 @@
             </div>
         </li>
     </ul>
-    <h2>Type Compatibility</h2>
+    <h2 id="9">Type Compatibility</h2><a href="#top">ページ上部へ</a>
     <ul>
         <li>
             型の互換。これはOK。
@@ -402,7 +410,7 @@
             </div>
         </li>
     </ul>
-    <h2>Advanced Types</h2>
+    <h2 id="10">Advanced Types</h2><a href="#top">ページ上部へ</a>
     <ul>
         <li>
             <b>pet is Fish</b> この書き方は初見。
@@ -513,7 +521,7 @@
         </li>
     </ul>
 
-    <h2>Iterators and Generators</h2>
+    <h2 id="11">Iterators and Generators</h2><a href="#top">ページ上部へ</a>
     <ul>
         <li>
             <b>for .. of</b> ステートメント
@@ -552,7 +560,7 @@
         </li>
     </ul>
 
-    <h2>Modules</h2>
+    <h2 id="12">Modules</h2><a href="#top">ページ上部へ</a>
     <ul>
         <li>
             Export a declaration and statements.
@@ -608,7 +616,7 @@
         </li>
     </ul>
 
-    <h2>Namespaces</h2>
+    <h2 id="13">Namespaces</h2><a href="#top">ページ上部へ</a>
     <li>
         バリデーションを行うプログラムを例に
         <div class="code">
@@ -713,7 +721,7 @@
         <small>MyTestPage.html</small>
     </li>
 
-    <h2>Mixins</h2>
+    <h2 id="14">Mixins</h2><a href="#top">ページ上部へ</a>
     <ul>
         <li>
             Mixin サンプルコードの全体
@@ -833,7 +841,7 @@
         </li>
     </ul>
 
-    <h2>Triple-Slash Directives</h2>
+    <h2 id="15">Triple-Slash Directives</h2><a href="#top">ページ上部へ</a>
     <ul>
         <li>
             ファイルへの参照を埋め込む。
@@ -845,6 +853,16 @@
         </li>
         <li>
 
+        </li>
+    </ul>
+
+    <h2 id="16">参考</h2><a href="#top">ページ上部へ</a>
+    <ul>
+        <li>
+            <a href="http://www.slideshare.net/jsakamoto/type-script-49408371">TypeScript入門 ―素のJavaScriptとはさようなら！―</a>
+        </li>
+        <li>
+            <a href="http://www.buildinsider.net/language/quicktypescript/01">TypeScript早わかりチートシート【1.5.3対応】</a>
         </li>
     </ul>
 

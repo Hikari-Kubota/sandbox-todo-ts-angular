@@ -35,6 +35,15 @@
     凡例
     <div class="code" style="width: 150px;">コード or コマンド</div>
     <div class="log" style="width: 50px;">出力</div>
+    <ul>
+        参考
+        <li>
+            <a href="http://www.slideshare.net/jsakamoto/type-script-49408371">TypeScript入門 ―素のJavaScriptとはさようなら！―</a>
+        </li>
+        <li>
+            <a href="http://www.buildinsider.net/language/quicktypescript/01">TypeScript早わかりチートシート【1.5.3対応】</a>
+        </li>
+    </ul>
 
     <!-- 4/19 -->
     <h2>Basic Types</h2>
@@ -265,7 +274,7 @@
     </li>
 
     <h2>Generics</h2>
-
+    別途資料にまとめる。
 
     <h2>Enums</h2>
     <ul>
@@ -386,13 +395,338 @@
                 }
             </div>
         </li>
+        <li>
+            Intersection Types（交差型）とはなんだろう。``これは union型に非常に近い関係性があるが、
+            別な使われ方をする。例えば、交差型<b>Person &amp; Serializable &amp; Loggable</b>
+            について考えてみよう。これは、あるオブジェクトが3つの型を持つことを意味する。
+            実際上は、mixin を使う場面でよく目にするだろう。"
+            <div class="code">
+                function extend<T, U>(first: T, second: U): T & U {
+                    let result = <T & U>{};
+                    for (let id in first) {
+                        (<any>result)[id] = (<any>first)[id];
+                    }
+                    for (let id in second) {
+                        if (!result.hasOwnProperty(id)) {
+                            (<any>result)[id] = (<any>second)[id];
+                        }
+                    }
+                    return result;
+                }
+
+                class Person {
+                    constructor(public name: string) { }
+                }
+                interface Loggable {
+                    log(): void;
+                }
+                class ConsoleLogger implements Loggable {
+                    log() {
+                        // ...
+                    }
+                }
+                var jim = extend(new Person("Jim"), new ConsoleLogger());
+                var n = jim.name;
+                jim.log();
+            </div>
+        </li>
+        <li>
+            こんな型指定の仕方もある。
+            <div class="code">
+                type Name = string;
+                type NameResolver = () => string;
+                type NameOrResolver = Name | NameResolver;
+                function getName(n: NameOrResolver): Name {
+                    if (typeof n === 'string') {
+                        return n;
+                    }
+                    else {
+                        return n();
+                    }
+                }
+            </div>
+        </li>
+        <li>
+            リテラルな文字も型として扱える。
+            <div class="code">
+                type Easing = "ease-in" | "ease-out" | "ease-in-out";
+                class UIElement {
+                    animate(dx: number, dy: number, easing: Easing) {
+                        if (easing === "ease-in") {
+                            // ...
+                        }
+                        else if (easing === "ease-out") {
+                        }
+                        else if (easing === "ease-in-out") {
+                        }
+                        else {
+                            // error! should not pass null or undefined.
+                        }
+                    }
+                }
+
+                let button = new UIElement();
+                button.animate(0, 0, "ease-in");
+                button.animate(0, 0, "uneasy"); // NG. "uneasy" という型は Easing に与えていないため。
+            </div>
+            <div class="log">
+                Argument of type '"uneasy"' is not assignable to parameter of type '"ease-in" | "ease-out" | "ease-in-out"'
+            </div>
+        </li>
     </ul>
+
     <h2>Iterators and Generators</h2>
+    <ul>
+        <li>
+            <b>for .. of</b> ステートメント
+            <div class="code">
+                let someArray = [1, "string", false];
+
+                for (let entry of someArray) {
+                    console.log(entry); // 1, "string", false
+                }
+            </div>
+        </li>
+        <li>
+            <b>for .. of</b> と <b>for .. in</b> の違い
+            <div class="code">
+                let list = [4, 5, 6];
+                console.log('for .. in');
+                for (let i in list) {
+                   console.log(i); // "0", "1", "2",
+                }
+
+                console.log('for .. of');
+                for (let i of list) {
+                   console.log(i); // "4", "5", "6"
+                }
+            </div>
+            <div class="log">
+                for .. in
+                0
+                1
+                2
+                for .. of
+                4
+                5
+                6
+            </div>
+        </li>
+    </ul>
+
     <h2>Modules</h2>
+    <ul>
+        <li>
+            Export a declaration and statements.
+        </li>
+        <li>
+            Import
+            <div class="code">
+                import { ZipCodeValidator } from "./ZipCodeValidator";
+                let myValidator = new ZipCodeValidator();
+            </div>
+        </li>
+        <li>
+            こんな import の仕方も。Python と非常に似ている。
+            <div class="code">
+                import * as validator from "./ZipCodeValidator";
+                let myValidator = new validator.ZipCodeValidator();
+            </div>
+        </li>
+        <li>
+            <b>default</b> は export したモジュールのデフォルト値。
+        </li>
+        <li>
+            モジュールを <b>export =</b> で export。
+            <b>import let = require("module")</b> で import。<br />
+            <div class="code">
+                let numberRegexp = /^[0-9]+$/;
+                class ZipCodeValidator {
+                    isAcceptable(s: string) {
+                        return s.length === 5 && numberRegexp.test(s);
+                    }
+                }
+                export = ZipCodeValidator;
+            </div>
+            <small>ZipCodeValidator.ts</small>
+            <div class="code">
+                import zip = require("./ZipCodeValidator");
+
+                // Some samples to try
+                let strings = ["Hello", "98052", "101"];
+
+                // Validators to use
+                let validator = new zip();
+
+                // Show whether each string passed each validator
+                strings.forEach(s => {
+                  console.log(`"${ s }" - ${ validator.isAcceptable(s) ? "matches" : "does not match" }`);
+                });
+            </div>
+            <small>Test.ts</small>
+        </li>
+        <li>
+            CommonJS と AMD とは……？（<a href="https://tsuchikazu.net/javascript-module/" target="_blank">参考</a>）
+        </li>
+    </ul>
+
     <h2>Namespaces</h2>
+    <li>
+        バリデーションを行うプログラムを例に
+        <div class="code">
+            interface StringValidator {
+                isAcceptable(s: string): boolean;
+            }
+
+            let lettersRegexp = /^[A-Za-z]+$/;
+            let numberRegexp = /^[0-9]+$/;
+
+            class LettersOnlyValidator implements StringValidator {
+                isAcceptable(s: string) {
+                    return lettersRegexp.test(s);
+                }
+            }
+
+            class ZipCodeValidator implements StringValidator {
+                isAcceptable(s: string) {
+                    return s.length === 5 && numberRegexp.test(s);
+                }
+            }
+
+            // Some samples to try
+            let strings = ["Hello", "98052", "101"];
+
+            // Validators to use
+            let validators: { [s: string]: StringValidator; } = {};
+            validators["ZIP code"] = new ZipCodeValidator();
+            validators["Letters only"] = new LettersOnlyValidator();
+
+            // Show whether each string passed each validator
+            for (let s of strings) {
+                for (let name in validators) {
+                    let isMatch = validators[name].isAcceptable(s);
+                    console.log(`'${ s }' ${ isMatch ? "matches" : "does not match" } '${ name }'.`);
+                }
+            }
+        </div>
+        <small>シンプルに1つのファイルにまとめた例</small>
+        <div class="log">
+            'Hello' does not match 'ZIP code'.
+            'Hello' matches 'Letters only'.
+            '98052' matches 'ZIP code'.
+            '98052' does not match 'Letters only'.
+            '101' does not match 'ZIP code'.
+            '101' does not match 'Letters only'.
+        </div>
+
+        <div class="code">
+            <b>namespace Validation</b> {
+                export interface StringValidator {
+                    isAcceptable(s: string): boolean;
+                }
+
+                const lettersRegexp = /^[A-Za-z]+$/;
+                const numberRegexp = /^[0-9]+$/;
+
+                export class LettersOnlyValidator implements StringValidator {
+                    isAcceptable(s: string) {
+                        return lettersRegexp.test(s);
+                    }
+                }
+
+                export class ZipCodeValidator implements StringValidator {
+                    isAcceptable(s: string) {
+                        return s.length === 5 && numberRegexp.test(s);
+                    }
+                }
+            }
+
+            // Some samples to try
+            let strings = ["Hello", "98052", "101"];
+
+            // Validators to use
+            let validators: { [s: string]: Validation.StringValidator; } = {};
+            validators["ZIP code"] = new Validation.ZipCodeValidator();
+            validators["Letters only"] = new Validation.LettersOnlyValidator();
+
+            // Show whether each string passed each validator
+            for (let s of strings) {
+                for (var name in validators) {
+                    console.log(`"${ s }" - ${ validators[name].isAcceptable(s) ? "matches" : "does not match" } ${ name }`);
+                }
+            }
+        </div>
+        <small>名前空間を適用した例</small>
+    </li>
+    <li>
+        複数のファイルに分けることもできる。その場合、コンパイルは次のようにする。
+        <div class="code">
+            tsc --outFile sample.js Validation.ts LettersOnlyValidator.ts ZipCodeValidator.ts Test.ts
+        </div>
+    </li>
+    <li>
+        htmlファイルからは次のように呼び出す。
+        <div class="code">
+            &lt;script src=&quot;Validation.js&quot; type=&quot;text/javascript&quot; /&gt;
+            &lt;script src=&quot;LettersOnlyValidator.js&quot; type=&quot;text/javascript&quot; /&gt;
+            &lt;script src=&quot;ZipCodeValidator.js&quot; type=&quot;text/javascript&quot; /&gt;
+            &lt;script src=&quot;Test.js&quot; type=&quot;text/javascript&quot; /&gt;
+        </div>
+        <small>MyTestPage.html</small>
+    </li>
+
     <h2>Mixins</h2>
+    別途資料にまとめる。
+
     <h2>Triple-Slash Directives</h2>
+    <ul>
+        <li>
+            ファイルへの参照を埋め込む。
+        </li>
+        <li>
+            <b>test.d.ts</b> と、これをコンパイルした<b>test.js</b>について考えよう。
+            前者へは開発者のみがアクセス可能であればよい。
+            後者へは実行する誰もがアクセス可能であるべきである。
+        </li>
+        <li>
+
+        </li>
+    </ul>
 
 </body>
 
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.

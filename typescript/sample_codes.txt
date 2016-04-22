@@ -1,0 +1,122 @@
+/////////////////////
+// Generics
+/////////////////////
+
+/* Sample 1 */
+function echo(arg: number): number {
+	return arg;
+}
+
+
+/* Sample 2 */
+function num_echo(arg: number): number {
+	return arg;
+}
+
+function str_echo(arg: string): string {
+	return arg;
+}
+
+
+/* Sample 3 */
+function echo(arg: any): any {
+	return arg;
+}
+
+
+/* Sample 4 */
+function echo(arg: string);
+function echo(arg: number);
+function echo(arg: any): any {
+	return arg;
+}
+
+echo("Hello!");　// OK
+echo(123);	// OK
+echo(true);	// NG!
+
+
+/* Sample 5 */
+function echo<T>(arg: T): T {
+	return arg;
+}
+
+echo<string>("Hello!"); // OK
+echo<number>(123); // OK
+echo<number>(true); // NG!
+echo<boolean>(true); // OK
+
+
+/* Sample 6 */
+interface greeterInterface {
+	greet();
+}
+
+class greeter implements greeterInterface {
+	public greet() {
+		alert("Hello!");
+	}
+}
+
+function meeting<T>(arg: T) {
+	arg.greet();
+}
+
+meeting(new greeter());
+
+
+/* Sample 7 */
+function meeting<T>(arg: T) {
+	var any_arg: any = arg;
+	any_arg.greet();
+}
+
+
+/////////////////////
+// Mixins
+/////////////////////
+
+/* Sample 8 */
+interface greeterInterface {
+	greet();
+}
+
+class greeter implements greeterInterface {
+	public greet() {
+		alert("Hello!");
+	}
+}
+
+function meeting<T extends greeterInterface>(arg: T) {
+	arg.greet();
+}
+
+meeting(new greeter());
+
+
+/* Sample 9 */
+class MixinB {
+	public hello() {
+		alert("Hello!");
+	}
+}
+
+class MixinC {
+	public bye(){
+		alert("Bye!");
+	}
+}
+
+class A implements MixinB, MixinC {
+	// MixinB, MixinC のメンバを宣言
+	hello:() => void;
+	bye:() => void;
+}
+
+// メンバの実装をバインディング
+A.prototype["hello"] = MixinB.prototype["hello"];
+A.prototype["bye"] = MixinC.prototype["bye"];
+
+var a: A = new A;
+a.hello();
+a.bye();

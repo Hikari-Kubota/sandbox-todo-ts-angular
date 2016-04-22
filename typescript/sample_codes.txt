@@ -27,7 +27,7 @@ function echo(arg: any): any {
 /* Sample 4 */
 function echo(arg: string);
 function echo(arg: number);
-function echo(arg: any): any {
+function echo(arg) {
 	return arg;
 }
 

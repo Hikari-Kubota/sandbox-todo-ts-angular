@@ -30,7 +30,7 @@
     "jade": "^1.11.0",
     "node-sass": "^2.1.1",
     "typescript": "^1.8.9",
-    "typings": "^0.7.12",
+    "typings": "^0.8.1",
     "watch": "^0.16.0"
   }
 }

@@ -4,10 +4,10 @@
         "noImplicitAny": true,
         "removeComments": true,
         "preserveConstEnums": true,
-        "out": "dist/app.js",
+        "out": "dist/Main.js",
         "sourceMap": true
     },
     "files": [
-        "src/scripts/entry.ts"
+        "src/scripts/Main.ts"
     ]
 }

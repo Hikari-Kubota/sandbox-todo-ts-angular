@@ -9,17 +9,7 @@ app.directive('todoList', [()=> {
         scope: {
             todoItems: '=',
         },
-        template: '<ul class="list-group">' +
-                    '<li class="list-group-item" ng-repeat="todoItem in todoItems">' +
-                        '<div class="list-group-item-inner">'+
-                            '<div class="item-wrapper"><input type="checkbox" ng-model="todoItem.done"></div>' +
-                            '<label class="done-{{todoItem.done}}" ng-dblclick="update($event, todoItem)">{{todoItem.message}}</label>'+
-                            '<div class="item-wrapper">'+
-                                '<button class="btn btn-xs btn-danger" ng-click="delete($event, todoItem.id)">&times;</button>'+
-                            '</div>'+
-                        '</div>'+
-                    '</li>'+
-                  '</ul>',
+        templateUrl: '../../list_template.html',
         link: (scope: any, iElement: any)=> {
             // todoItem を更新
             scope.update = ($event: any, todoItem: any) => {
@@ -37,7 +27,8 @@ app.directive('todoList', [()=> {
             };
             // todoItem を削除
             scope.delete = ($event: any, itemId: number) => {
-                var index = 1;
+                console.log(itemId);
+                var index: number;
                 var t: any;
                 for (var i = 0; i < scope.todoItems.length; i++) {
                     t = scope.todoItems[i];

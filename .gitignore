@@ -1,5 +1,5 @@
 .DS_Store
 .localized
 .vagrant
-#node_modules/
-#typings/
+node_modules/
+typings/

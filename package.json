@@ -5,21 +5,18 @@
   "scripts": {
     "postinstall": "typings install",
     "build:js": "tsc -p ./",
-    "build:css": "node-sass --output-style compressed src/styles/style.scss dist/style.css",
+    "build:css": "node-sass --output-style compressed src/styles/main.scss dist/main.css",
     "build:html": "jade -P src/markups/index.jade --out ./",
-    "build": "npm run build:js && npm run build:css && npm run build:html",
+    "build": "npm run build:js && npm run build:css",
     "watch:js": "watch 'npm run build:js' src/scripts/",
     "watch:css": "watch 'npm run build:css' src/styles/",
     "watch:html": "watch 'npm run build:html' src/markups/",
-    "watch": "npm run watch:js & npm run watch:css & npm run watch:html"
+    "watch": "npm run watch:js & npm run watch:css"
   },
-  "author": {
-    "name": "yukiyo",
-    "email": "yuki@giamnote.net"
-  },
+  "author": "yukiyo <yuki@giamnote.net>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yukink/sandbox-todo-ts-angular"
+    "url": "git+https://github.com/yukink/sandbox-todo-ts-angular.git"
   },
   "license": "MIT",
   "dependencies": {
@@ -28,9 +25,14 @@
   },
   "devDependencies": {
     "jade": "^1.11.0",
-    "node-sass": "^2.1.1",
+    "node-sass": "^3.5.3",
     "typescript": "^1.8.9",
     "typings": "^0.8.1",
     "watch": "^0.16.0"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/yukink/sandbox-todo-ts-angular/issues"
+  },
+  "homepage": "https://github.com/yukink/sandbox-todo-ts-angular#readme",
+  "main": "index.js"
 }

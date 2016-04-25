@@ -5,6 +5,9 @@
 $theme-primary: #DB1E21;
 
 /* Scaffoldings */
+body {
+    margin: 50px;
+}
 .text-primary {
     color: $theme-primary;
 }
@@ -27,7 +30,7 @@ $theme-primary: #DB1E21;
 }
 
 .item-wrapper {
-    > * {
+    * {
         vertical-align: sub;
     }
 }

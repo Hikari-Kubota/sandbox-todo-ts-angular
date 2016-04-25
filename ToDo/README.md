@@ -8,3 +8,6 @@
 - AltJS に TypeScript を使う
 - フレームワークに AngularJS を使う
 - コントローラ、ディレクティブをクラス化して外部モジュールとして外出しする
+
+## 参考元
+https://tech.recruit-mp.co.jp/front-end/post-5020/

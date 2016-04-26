@@ -15,6 +15,29 @@
         <div ng-controller="todoController">
             <section class="panel panel-default">
                 <header class="panel-heading">
+                    <div class="input-group">
+                        <input type="text" class="form-control" ng-model="message" placeholder="ToDo ..." />
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" ng-click="addTodoItem(message)">Add</button>
+                        </span>
+                    </div>
+                </header>
+                <todo-list class="list-group">
+                    <!-- [1] -->
+                    <todo-item todo="todoItem" ng-repeat="todoItem in todoItems"></todo-item>
+                </todo-list>
+                <footer class="panel-footer">
+                    <span class="badge">{{remaining()}} / {{todoItems.length}}</span> Items left
+                </footer>
+            </section>
+        </div>
+    </div>
+
+    <!-- #2. リスト部分をまるごとディレクティブ化する
+    <div ng-app="app">
+        <div ng-controller="todoController">
+            <section class="panel panel-default">
+                <header class="panel-heading">
                     <form name="todoForm">
                         <div class="input-group">
                             <input name="todo" type="text" class="form-control" ng-model="message" placeholder="ToDo ..." / required>
@@ -31,6 +54,7 @@
             </section>
         </div>
     </div>
+    -->
 
 
     <!-- #1. コントローラと HTML 要素だけのシンプルな構成

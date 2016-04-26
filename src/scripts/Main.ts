@@ -1,8 +1,10 @@
 /// <reference path="../../typings/main.d.ts"/>
+
 import * as angular from 'angular';
 import * as AngularTodo from './AngularTodo';
 
-const app = angular.module('app', []);
+var app = angular.module('app', []);
+
 
 app.controller('todoController', [AngularTodo.TodoController]);
 app.directive('todoList', AngularTodo.TodoListDirective.Factory());

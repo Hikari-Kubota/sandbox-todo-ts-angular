@@ -1,1 +1,1 @@
-// 依存するファイルのパスを追加
+/// <reference path="./AngularTodo.ts"/>

@@ -8,17 +8,21 @@
 </head>
 
 <body>
-    <h1>ToDo</h1>
+    <div class="page-header">
+        <h1>ToDo</h1>
+    </div>
     <div ng-app="app">
         <div ng-controller="todoController as c">
             <section class="panel panel-default">
                 <header class="panel-heading">
                     <form name="todoForm" novalidate>
-                        <div class="input-group">
-                            <input type="text" name="todoInput" class="form-control" ng-model="c.message" placeholder="ToDo ..." required/>
+                        <div class="input-group input-group-lg">
+                            <input type="text" name="todoInput" class="form-control" ng-model="c.message" placeholder="ToDo ..." required />
+                            <div class="input-group-addon">
+                                <select ng-model="c.priority" ng-options="pr.p for pr in c.priorities" novalidate=""></select>
+                            </div>
                             <span class="input-group-btn">
-                                <button class="btn btn-primary" ng-click="c.addTodoItem(c.message)" ng-disabled="todoForm.todoInput.$error.required">Add</button>
-                                <priority ng-model="stars"></priority>
+                                <button class="btn btn-primary" ng-click="c.addTodoItem(c.message, c.priority)" ng-disabled="todoForm.todoInput.$error.required">Add</button>
                             </span>
                         </div>
                     </form>

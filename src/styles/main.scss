@@ -3,6 +3,7 @@
 
 /* Variables */
 $theme-primary: #DB1E21;
+$done: gray;
 
 /* Scaffoldings */
 body {
@@ -13,9 +14,13 @@ body {
 }
 
 /* ToDo */
+.panel-body {
+    font-size: 18px;
+}
+
 .done-true {
     text-decoration: line-through;
-    color: gray;
+    color: $done;
     font-style: italic;
 }
 
@@ -33,4 +38,13 @@ body {
     * {
         vertical-align: sub;
     }
+}
+
+.label {
+    margin: 0 20px;
+    font-size: 18px;
+}
+
+.label-done-true {
+    background-color: $done;
 }

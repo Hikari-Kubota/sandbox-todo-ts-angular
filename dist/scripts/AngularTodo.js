@@ -57,33 +57,47 @@ var TodoListDirective = (function () {
     return TodoListDirective;
 }());
 exports.TodoListDirective = TodoListDirective;
+var PriorityDirective = (function () {
+    function PriorityDirective() {
+        this.max = 3;
+        this.restrict = "E";
+        this.replace = true;
+        this.require = "ngModel";
+        this.template = '<span>☆☆☆</span>';
+        this.link = function (scope, element, attrs, todoController) {
+        };
+    }
+    PriorityDirective.Factory = function () {
+        var directive = function () {
+            return new PriorityDirective();
+        };
+        directive.$inject = [];
+        return directive;
+    };
+    return PriorityDirective;
+}());
+exports.PriorityDirective = PriorityDirective;
 var TodoItemDirective = (function () {
     function TodoItemDirective() {
         this.restrict = 'E';
         this.replace = true;
         this.require = '^todoList';
-        this.template = '<div class="list-group-item">' +
-            '<div class="list-group-item-inner" ng-hide="isEditMode">' +
-            '<div class="item-wrapper"><input type="checkbox" ng-model="todoItem.done" /></div>' +
-            '<label class="done-{{todoItem.done}}" ng-dblclick="startEdit(todoItem.id)">{{todoItem.message}}</label>' +
-            '<div class="item-wrapper"><button class="btn btn-danger btn-xs" ng-click="removeTodoItem(todoItem.id)">&times;</button></div>' +
-            '</div>' +
-            '<div ng-show="isEditMode">' +
-            '<input ng-model="todoItem.message" class="form-control input-sm" todo-focus ng-blur="updateTodoItem($event)" ng-keyup="updateTodoItem($event)" />' +
-            '</div>' +
-            '</div>';
+        this.template = "<div class=\"list-group-item\">\n                            <div class=\"list-group-item-inner\" ng-hide=\"isEditMode\">\n                                <div class=\"item-wrapper\"><input type=\"checkbox\" ng-model=\"todoItem.done\" /></div>\n                                <label class=\"done-{{todoItem.done}}\" ng-dblclick=\"startEdit(todoItem.id)\">{{todoItem.message}}</label>\n                                <div class=\"item-wrapper\"><button class=\"btn btn-danger btn-xs\" ng-click=\"removeTodoItem(todoItem.id)\">&times;</button></div>\n                            </div>\n                            <div ng-show=\"isEditMode\">\n                                <input ng-model=\"todoItem.message\" class=\"form-control input-sm\" todo-focus ng-blur=\"updateTodoItem($event, todoItem)\" ng-keyup=\"updateTodoItem($event, todoItem)\" />\n                            </div>\n                        </div>";
         this.link = function (scope, element, attrs, todoController) {
             scope.isEditMode = false;
             scope.startEdit = function (id) {
                 scope.isEditMode = true;
             };
-            scope.updateTodoItem = function ($event) {
+            scope.updateTodoItem = function ($event, todoItem) {
                 if ($event.type === 'keyup') {
                     if ($event.which !== 13)
                         return;
                 }
                 else if ($event.type !== 'blur') {
                     return;
+                }
+                if (todoItem.message == "") {
+                    scope.removeTodoItem(todoItem.id);
                 }
                 scope.isEditMode = false;
                 $event.stopPropagation();

@@ -1,13 +1,14 @@
-<ul class="list-group">
-    <li class="list-group-item" ng-repeat="todoItem in todoItems">
-        <div class="list-group-item-inner">
-            <div class="item-wrapper">
-                <input type="checkbox" ng-model="todoItem.done">
-            </div>
-            <label class="done-{{todoItem.done}}" ng-dblclick="update($event, todoItem)">{{todoItem.message}}</label>
-            <div class="item-wrapper">
-                <button class="btn btn-xs btn-danger" ng-click="delete($event, todoItem.id)">&times;</button>
-            </div>
+<div class="list-group-item">
+    <div class="list-group-item-inner" ng-hide="isEditMode">
+        <div class="item-wrapper">
+            <input type="checkbox" ng-model="todoItem.done" />
         </div>
-    </li>
-</ul>
+        <label class="done-{{todoItem.done}}" ng-dblclick="startEdit(todoItem.id)">{{todoItem.message}}</label>
+        <div class="item-wrapper">
+            <button class="btn btn-danger btn-xs" ng-click="removeTodoItem(todoItem.id)">&times;</button>
+        </div>
+    </div>
+    <div ng-show="isEditMode">
+        <input ng-model="todoItem.message" class="form-control input-sm" todo-focus ng-blur="updateTodoItem($event)" ng-keyup="updateTodoItem($event)" />
+    </div>
+</div>

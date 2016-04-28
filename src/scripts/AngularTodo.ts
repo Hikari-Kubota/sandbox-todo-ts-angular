@@ -38,6 +38,8 @@ export class TodoController {
 
     constructor(private $scope: ng.IScope) {
         this.todoItems = this.loadTodoItems();
+
+        // 優先度メニューの値をセット
         this.priorities = [
             { level: 0, name: "Now!", color: "danger" },
             { level: 1, name: "High", color: "warning" },
@@ -47,10 +49,12 @@ export class TodoController {
         ];
         this.priority = this.priorities[2];
 
+        // フィルターの設定
         this.filterPriorities = [{level: -1, name: "--Priority--", color: ""}];
         this.filterPriorities = this.filterPriorities.concat(this.priorities);
         this.filterConditions = {word: "", priority: this.filterPriorities[0], status: ""};
         this.filterConditions.priority = this.filterPriorities[0];
+
         // deep watch
         $scope.$watch(() => { return this.todoItems; },
             (newVal, oldVal) => {
@@ -133,26 +137,30 @@ export class TodoItemDirective implements ng.IDirective {
         this.require = '^todoList';
         this.template = `
         <div class="list-group-item">
-                            <div class="list-group-item-inner done-{{todoItem.done}}" ng-hide="isEditMode">
-                                <div class="item-wrapper"><input type="checkbox" ng-model="todoItem.done" /></div>
-                                <label ng-dblclick="startEdit(todoItem.id)">{{todoItem.message}}</label>
-                                <span class="label label-{{todoItem.priority.color}} label-done-{{todoItem.done}}" ng-dblclick="startEdit(todoItem.id)">{{todoItem.priority.name}}</span>
-                                <div class="item-wrapper"><button class="btn btn-danger btn-sm" ng-click="removeTodoItem(todoItem.id)">&times;</button></div>
-                            </div>
-                            <div ng-show="isEditMode">
-                                <form name="todoEditForm" novalidate>
-                                    <div class="input-group input-group-lg">
-                                        <input type="text" name="todoEdit" class="form-control" ng-model="todoItem.message" ng-blur="updateTodoItem($event, todoItem)" ng-keyup="updateTodoItem($event, todoItem)" placeholder="ToDo ..." />
-                                        <div class="input-group-addon">
-                                            <select ng-model="todoItem.priority" ng-options="pr.name for pr in c.priorities" novalidate=""></select>
-                                        </div>
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-primary" ng-click="updateTodoItem($event, todoItem)">Update</button>
-                                        </span>
-                                    </div>
-                                </form>
-                            </div>
+            <div class="list-group-item-inner done-{{todoItem.done}}" ng-hide="isEditMode">
+                <div class="item-wrapper">
+                    <input type="checkbox" ng-model="todoItem.done" />
+                </div>
+                <label ng-dblclick="startEdit(todoItem.id)">{{todoItem.message}}</label>
+                <span class="label label-{{todoItem.priority.color}} label-done-{{todoItem.done}}" ng-dblclick="startEdit(todoItem.id)">{{todoItem.priority.name}}</span>
+                <div class="item-wrapper">
+                    <button class="btn btn-danger btn-sm" ng-click="removeTodoItem(todoItem.id)">&times;</button>
+                </div>
+            </div>
+            <div ng-show="isEditMode">
+                <form name="todoEditForm" novalidate>
+                    <div class="input-group input-group-lg">
+                        <input type="text" name="todoEdit" class="form-control" ng-model="todoItem.message" ng-blur="updateTodoItem($event, todoItem)" ng-keyup="updateTodoItem($event, todoItem)" placeholder="ToDo ..." />
+                        <div class="input-group-addon">
+                            <select ng-model="todoItem.priority" ng-options="pr.name for pr in c.priorities" novalidate=""></select>
                         </div>
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" ng-click="updateTodoItem($event, todoItem)">Update</button>
+                        </span>
+                    </div>
+                </form>
+            </div>
+        </div>
         `;
         this.link = (scope: ITodoItemDirectiveScope, element: ng.IAugmentedJQuery, attrs: ng.IAttributes, todoController: TodoController) => {
             scope.isEditMode = false;
@@ -165,9 +173,7 @@ export class TodoItemDirective implements ng.IDirective {
             scope.updateTodoItem = ($event, todoItem) => {
                 if ($event.type === 'keyup') {
                     if ($event.which !== 13) return;
-                }/* else if ($event.type !== 'blur') {
-                    return;
-                }*/
+                }
                 if (todoItem.message == "") {
                     scope.removeTodoItem(todoItem.id);
                 }
@@ -247,7 +253,7 @@ export class TodoFilter {
                 }
             }
             if (fc.status == "" || fc.status == "all") statusResult = true;
-            
+
             return wordResult && priorityResult && statusResult;
         });
     }

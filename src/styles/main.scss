@@ -7,8 +7,16 @@ $done: gray;
 
 /* Scaffoldings */
 body {
-    margin: 50px;
+    width: 960px;
+    margin: 0 auto;
 }
+
+.filter {
+    width: 480px;
+    margin-left: auto;
+    margin-top: 10px;
+}
+
 .text-primary {
     color: $theme-primary;
 }

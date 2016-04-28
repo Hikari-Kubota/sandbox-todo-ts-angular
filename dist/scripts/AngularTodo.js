@@ -5,21 +5,38 @@ var TodoItem = (function () {
     return TodoItem;
 }());
 exports.TodoItem = TodoItem;
+var FilterConditions = (function () {
+    function FilterConditions() {
+    }
+    return FilterConditions;
+}());
+exports.FilterConditions = FilterConditions;
+var Priority = (function () {
+    function Priority() {
+    }
+    return Priority;
+}());
+exports.Priority = Priority;
 var TodoController = (function () {
     function TodoController($scope) {
         var _this = this;
         this.$scope = $scope;
         this.index = 0;
         this.priorities = [];
+        this.filterPriorities = [];
         this.todoItems = this.loadTodoItems();
         this.priorities = [
-            { l: 0, p: "Now!", c: "danger" },
-            { l: 1, p: "High", c: "warning" },
-            { l: 2, p: "Normal", c: "info" },
-            { l: 3, p: "Low", c: "success" },
-            { l: 4, p: "Sometime...", c: "primary" },
+            { level: 0, name: "Now!", color: "danger" },
+            { level: 1, name: "High", color: "warning" },
+            { level: 2, name: "Normal", color: "info" },
+            { level: 3, name: "Low", color: "success" },
+            { level: 4, name: "Sometime...", color: "primary" },
         ];
         this.priority = this.priorities[2];
+        this.filterPriorities = [{ level: -1, name: "--Priority--", color: "" }];
+        this.filterPriorities = this.filterPriorities.concat(this.priorities);
+        this.filterConditions = { word: "", priority: this.filterPriorities[0], status: "" };
+        this.filterConditions.priority = this.filterPriorities[0];
         $scope.$watch(function () { return _this.todoItems; }, function (newVal, oldVal) {
             _this.saveTodoItems(newVal);
         }, true);
@@ -89,7 +106,7 @@ var TodoItemDirective = (function () {
         this.restrict = 'E';
         this.replace = true;
         this.require = '^todoList';
-        this.template = "<div class=\"list-group-item\">\n                            <div class=\"list-group-item-inner done-{{todoItem.done}}\" ng-hide=\"isEditMode\">\n                                <div class=\"item-wrapper\"><input type=\"checkbox\" ng-model=\"todoItem.done\" /></div>\n                                <label ng-dblclick=\"startEdit(todoItem.id)\">{{todoItem.message}}</label>\n                                <span class=\"label label-{{todoItem.priority.c}} label-done-{{todoItem.done}}\" ng-dblclick=\"startEdit(todoItem.id)\">{{todoItem.priority.p}}</span>\n                                <div class=\"item-wrapper\"><button class=\"btn btn-danger btn-sm\" ng-click=\"removeTodoItem(todoItem.id)\">&times;</button></div>\n                            </div>\n                            <div ng-show=\"isEditMode\">\n                                <form name=\"todoEditForm\" novalidate>\n                                    <div class=\"input-group input-group-lg\">\n                                        <input type=\"text\" name=\"todoEdit\" class=\"form-control\" ng-model=\"todoItem.message\" ng-blur=\"updateTodoItem($event, todoItem)\" ng-keyup=\"updateTodoItem($event, todoItem)\" placeholder=\"ToDo ...\" />\n                                        <div class=\"input-group-addon\">\n                                            <select ng-model=\"todoItem.priority\" ng-options=\"pr.p for pr in c.priorities\" novalidate=\"\"></select>\n                                        </div>\n                                        <span class=\"input-group-btn\">\n                                            <button class=\"btn btn-primary\" ng-click=\"updateTodoItem($event, todoItem)\">Update</button>\n                                        </span>\n                                    </div>\n                                </form>\n                            </div>\n                        </div>";
+        this.template = "\n        <div class=\"list-group-item\">\n                            <div class=\"list-group-item-inner done-{{todoItem.done}}\" ng-hide=\"isEditMode\">\n                                <div class=\"item-wrapper\"><input type=\"checkbox\" ng-model=\"todoItem.done\" /></div>\n                                <label ng-dblclick=\"startEdit(todoItem.id)\">{{todoItem.message}}</label>\n                                <span class=\"label label-{{todoItem.priority.color}} label-done-{{todoItem.done}}\" ng-dblclick=\"startEdit(todoItem.id)\">{{todoItem.priority.name}}</span>\n                                <div class=\"item-wrapper\"><button class=\"btn btn-danger btn-sm\" ng-click=\"removeTodoItem(todoItem.id)\">&times;</button></div>\n                            </div>\n                            <div ng-show=\"isEditMode\">\n                                <form name=\"todoEditForm\" novalidate>\n                                    <div class=\"input-group input-group-lg\">\n                                        <input type=\"text\" name=\"todoEdit\" class=\"form-control\" ng-model=\"todoItem.message\" ng-blur=\"updateTodoItem($event, todoItem)\" ng-keyup=\"updateTodoItem($event, todoItem)\" placeholder=\"ToDo ...\" />\n                                        <div class=\"input-group-addon\">\n                                            <select ng-model=\"todoItem.priority\" ng-options=\"pr.name for pr in c.priorities\" novalidate=\"\"></select>\n                                        </div>\n                                        <span class=\"input-group-btn\">\n                                            <button class=\"btn btn-primary\" ng-click=\"updateTodoItem($event, todoItem)\">Update</button>\n                                        </span>\n                                    </div>\n                                </form>\n                            </div>\n                        </div>\n        ";
         this.link = function (scope, element, attrs, todoController) {
             scope.isEditMode = false;
             scope.startEdit = function (id) {
@@ -146,3 +163,43 @@ var TodoFocusDirective = (function () {
     return TodoFocusDirective;
 }());
 exports.TodoFocusDirective = TodoFocusDirective;
+var TodoFilter = (function () {
+    function TodoFilter() {
+    }
+    TodoFilter.prototype.filter = function (todoItems, fc) {
+        return todoItems.filter(function (todo) {
+            var wordResult = true;
+            var priorityResult = true;
+            var statusResult = true;
+            if (todo.message.indexOf(fc.word) == -1)
+                wordResult = false;
+            if (todo.message == "")
+                wordResult = true;
+            if (todo.priority.name != fc.priority.name)
+                priorityResult = false;
+            if (fc.priority.name == "--Priority--")
+                priorityResult = true;
+            if (fc.status == "active") {
+                if (todo.done) {
+                    statusResult = false;
+                }
+                else {
+                    statusResult = true;
+                }
+            }
+            else if (fc.status == "done") {
+                if (todo.done) {
+                    statusResult = true;
+                }
+                else {
+                    statusResult = false;
+                }
+            }
+            if (fc.status == "" || fc.status == "all")
+                statusResult = true;
+            return wordResult && priorityResult && statusResult;
+        });
+    };
+    return TodoFilter;
+}());
+exports.TodoFilter = TodoFilter;

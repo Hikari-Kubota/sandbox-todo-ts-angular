@@ -19,16 +19,37 @@
                         <div class="input-group input-group-lg">
                             <input type="text" name="todoInput" class="form-control" ng-model="c.message" placeholder="ToDo ..." required />
                             <div class="input-group-addon">
-                                <select ng-model="c.priority" ng-options="pr.p for pr in c.priorities" novalidate=""></select>
+                                <select ng-model="c.priority" ng-options="pr.name for pr in c.priorities" novalidate=""></select>
                             </div>
                             <span class="input-group-btn">
                                 <button class="btn btn-primary" ng-click="c.addTodoItem(c.message, c.priority)" ng-disabled="todoForm.todoInput.$error.required">Add</button>
                             </span>
                         </div>
                     </form>
+
+                    <form name="filterForm" novalidate>
+                        <div class="input-group input-group-sm filter">
+                            <input type="text" name="searchWordInput" class="form-control" ng-model = "c.filterConditions.word" placeholder="Search ..." />
+
+                            <div class="input-group-addon">
+                                <select ng-model="c.filterConditions.priority" ng-options="pr.name for pr in c.filterPriorities" novalidate=""></select>
+                            </div>
+                            <div class="input-group-btn" data-toggle="buttons">
+                                <label class="btn btn-primary">
+                                    <input type="radio" name="options" ng-model="c.filterConditions.status" value="all" autocomplete="off" checked>All
+                                </label>
+                                <label class="btn btn-primary">
+                                    <input type="radio" name="options" ng-model="c.filterConditions.status" value="active" autocomplete="off">Active
+                                </label>
+                                <label class="btn btn-primary">
+                                    <input type="radio" name="options" ng-model="c.filterConditions.status" value="done" autocomplete="off">Done
+                                </label>
+                            </div>
+                        </div>
+                    </form>
                 </header>
                 <todo-list class="list-group">
-                    <todo-item ng-repeat="todoItem in c.todoItems"></todo-item>
+                    <todo-item ng-repeat="todoItem in c.todoItems | todoFilter:c.filterConditions track by $index"></todo-item>
                 </todo-list>
                 <footer class="panel-footer">
                     <span class="badge">{{c.remaining()}} / {{c.todoItems.length}}</span> Items left

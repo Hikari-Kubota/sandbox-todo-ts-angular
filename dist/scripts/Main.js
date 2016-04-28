@@ -6,3 +6,4 @@ app.controller('todoController', ["$scope", AngularTodo.TodoController]);
 app.directive('todoList', AngularTodo.TodoListDirective.Factory());
 app.directive('todoItem', AngularTodo.TodoItemDirective.Factory());
 app.directive('todoFocus', AngularTodo.TodoFocusDirective.Factory());
+app.filter('todoFilter', function () { return (new AngularTodo.TodoFilter()).filter; });

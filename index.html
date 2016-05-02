@@ -23,7 +23,7 @@
                     <div class="input-group input-group-lg">
                         <input type="text" name="todoInput" class="form-control" ng-model="c.message" placeholder="ToDo ..." required />
                         <span class="input-group-btn">
-                            <button class="btn btn-primary" ng-click="c.addTodoItem(c.message, c.priority)" ng-disabled="todoForm.todoInput.$error.required">Add</button>
+                            <button class="btn btn-primary" ng-click="c.addTodoItem(c.message, c.priority, c.date)" ng-disabled="todoForm.todoInput.$error.required">Add</button>
                         </span>
                     </div>
                 </form>
@@ -53,13 +53,13 @@
                                 <label class="btn btn-primary" ng-class="{active: c.filterConditions.status=='done'}">
                                     <input type="radio" name="options" ng-model="c.filterConditions.status" value="done" autocomplete="off">Done
                                 </label>
-                                <button class="btn btn-default" ng-click="c.resetFilter()">Reset</button>
                             </div>
                         </div>
                         <div class="input-group">
                             <span class="input-group-button">
                                 <select class="btn-{{c.filterConditions.priority.color}}" ng-model="c.filterConditions.priority" ng-options="pr.name for pr in c.filterPriorities" novalidate=""></select>
                             </span>
+                            <button class="btn btn-default" ng-click="c.resetFilter()">Reset</button>
                         </div>
                     </form>
                 </div>

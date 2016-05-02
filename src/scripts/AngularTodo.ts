@@ -12,6 +12,7 @@ export class TodoItem {
     done: boolean;
     isEditMode: boolean;
     priority: Priority;
+    deadline: string;
 }
 
 export class FilterConditions {
@@ -43,8 +44,8 @@ export class TodoController {
     public filterPriorities = [];
     public priority: Priority;
     static $inject = ['$scope'];
-    public date: Date;
     public checkAll: boolean;
+    public date: string;
 
     constructor(private $scope: ng.IScope) {
 
@@ -105,17 +106,23 @@ export class TodoController {
         }
     }
 
-    public addTodoItem(msg: string, pr: Priority) {
+    public addTodoItem(msg: string, pr: Priority, date: string) {
         let maxId = this.getId();
+
         this.todoItems.push({
             id: maxId,
             message: msg,
             done: false,
             isEditMode: false,
-            priority: pr
+            priority: pr,
+            deadline: date
         });
         this.message = '';
         this.setId(maxId);
+
+        this.date = "";
+        this.priority = this.priorities[1];   // Normal
+
     }
 
     public removeTodoItem(id: number) {
@@ -218,6 +225,7 @@ export class TodoItemDirective implements ng.IDirective {
                     <input type="checkbox" ng-model="todoItem.done" ng-checked="c.checkAll"/>
                 </div>
                 <label ng-dblclick="startEdit(todoItem.id)">{{todoItem.message}}</label>
+                <label ng-dblclick="startEdit(todoItem.id)">{{todoItem.deadline}}</label>
                 <span class="label btn-{{todoItem.priority.color}} label-done-{{todoItem.done}}" ng-dblclick="startEdit(todoItem.id)">{{todoItem.priority.name}}</span>
                 <div class="item-wrapper">
                     <button class="btn btn-danger btn-sm" ng-click="removeTodoItem(todoItem.id)">&times;</button>

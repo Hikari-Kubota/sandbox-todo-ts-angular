@@ -5,7 +5,7 @@ import * as AngularTodo from './AngularTodo';
 
 var app = angular.module('app', []);
 
-
+app.controller('headerController', [AngularTodo.HeaderController]);
 app.controller('todoController', ["$scope", AngularTodo.TodoController]);
 
 app.directive('todoList', AngularTodo.TodoListDirective.Factory());

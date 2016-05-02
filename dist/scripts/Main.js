@@ -2,6 +2,7 @@
 var angular = require('angular');
 var AngularTodo = require('./AngularTodo');
 var app = angular.module('app', []);
+app.controller('headerController', [AngularTodo.HeaderController]);
 app.controller('todoController', ["$scope", AngularTodo.TodoController]);
 app.directive('todoList', AngularTodo.TodoListDirective.Factory());
 app.directive('todoItem', AngularTodo.TodoItemDirective.Factory());

@@ -11,19 +11,53 @@ body {
     margin: 0 auto;
 }
 
+.filter-switch {
+    width: 320px;
+    float: left;
+}
+
 .filter {
-    width: 480px;
+    width: 320px;
+    margin: auto;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.input-group {
+    width: 100%;
+    margin: 10px auto;
+}
+
+.footer-btn-group {
     margin-left: auto;
     margin-top: 10px;
+    text-align: right;
 }
 
 .text-primary {
     color: $theme-primary;
 }
 
+.select-box {
+    width: 100px;
+    padding-left: 10px;
+}
+
+.date-box {
+    width: 100px;
+}
+
+.todo-option {
+    width: 320px;
+    margin-left: auto;
+    margin-top: 10px;
+    text-align: right;
+}
+
 /* ToDo */
 .panel-body {
     font-size: 18px;
+    text-align: center;
 }
 
 .done-true {

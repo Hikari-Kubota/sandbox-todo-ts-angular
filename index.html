@@ -5,57 +5,90 @@
     <meta charset="UTF-8">
     <title>ToDo</title>
     <link rel="stylesheet" type="text/css" href="dist/styles/app.css">
+    <link href="bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet">
+    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+
 </head>
 
-<body>
+<body ng-app="app">
     <div class="page-header">
-        <h1>ToDo</h1>
+        <div ng-controller="headerController as h">
+            <h1>ToDo</h1>
+        </div>
     </div>
-    <div ng-app="app">
-        <div ng-controller="todoController as c">
-            <section class="panel panel-default">
-                <header class="panel-heading">
-                    <form name="todoForm" novalidate>
-                        <div class="input-group input-group-lg">
-                            <input type="text" name="todoInput" class="form-control" ng-model="c.message" placeholder="ToDo ..." required />
-                            <div class="input-group-addon">
-                                <select ng-model="c.priority" ng-options="pr.name for pr in c.priorities" novalidate=""></select>
+    <div ng-controller="todoController as c">
+        <section class="panel panel-default">
+            <header class="panel-heading">
+                <form name="todoForm" novalidate>
+                    <div class="input-group input-group-lg">
+                        <input type="text" name="todoInput" class="form-control" ng-model="c.message" placeholder="ToDo ..." required />
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" ng-click="c.addTodoItem(c.message, c.priority)" ng-disabled="todoForm.todoInput.$error.required">Add</button>
+                        </span>
+                    </div>
+                </form>
+                <div class="filter-switch" data-toggle="buttons">
+                    <label class="btn btn-primary" ng-class="{active: filterSwitch}">
+                        <input type="checkbox" ng-model="filterSwitch" />Search Filter {{filterSwitch ? 'OFF' : 'ON'}}
+                    </label>
+                </div>
+                <div class="todo-option">
+                    Options:
+                    <input type="text" class="datepicker date-box" ng-model="c.date" placeholder="Deadline" ng-disabled="todoForm.todoInput.$error.required">
+                    <select class="btn-{{c.priority.color}}" ng-model="c.priority" ng-options="pr.name for pr in c.priorities" novalidate="" ng-disabled="todoForm.todoInput.$error.required"></select>
+                </div>
+                <div class="filter" ng-show="filterSwitch">
+                    <form name="filterForm" novalidate>
+                        <div class="input-group">
+                            <input type="text" name="searchWordInput" class="form-control" ng-model="c.filterConditions.word" placeholder="Search ..." />
+                        </div>
+                        <div class="input-group">
+                            <div class="input-group-btn" data-toggle="buttons">
+                                <label class="btn btn-primary" ng-class="{active: c.filterConditions.status=='' || c.filterConditions.status=='all'}">
+                                    <input type="radio" name="options" ng-model="c.filterConditions.status" value="all" autocomplete="off" checked>All
+                                </label>
+                                <label class="btn btn-primary" ng-class="{active: c.filterConditions.status=='active'}">
+                                    <input type="radio" name="options" ng-model="c.filterConditions.status" value="active" autocomplete="off">Active
+                                </label>
+                                <label class="btn btn-primary" ng-class="{active: c.filterConditions.status=='done'}">
+                                    <input type="radio" name="options" ng-model="c.filterConditions.status" value="done" autocomplete="off">Done
+                                </label>
+                                <button class="btn btn-default" ng-click="c.resetFilter()">Reset</button>
                             </div>
-                            <span class="input-group-btn">
-                                <button class="btn btn-primary" ng-click="c.addTodoItem(c.message, c.priority)" ng-disabled="todoForm.todoInput.$error.required">Add</button>
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-button">
+                                <select class="btn-{{c.filterConditions.priority.color}}" ng-model="c.filterConditions.priority" ng-options="pr.name for pr in c.filterPriorities" novalidate=""></select>
                             </span>
                         </div>
                     </form>
-
-                    <form name="filterForm" novalidate>
-                        <div class="input-group input-group-sm filter">
-                            <input type="text" name="searchWordInput" class="form-control" ng-model = "c.filterConditions.word" placeholder="Search ..." />
-                            <div class="input-group-addon">
-                                <select ng-model="c.filterConditions.priority" ng-options="pr.name for pr in c.filterPriorities" novalidate=""></select>
-                            </div>
-                            <div class="input-group-btn" data-toggle="buttons">
-                                <label class="btn btn-primary">
-                                    <input type="radio" name="options" ng-model="c.filterConditions.status" value="all" autocomplete="off" checked>All
-                                </label>
-                                <label class="btn btn-primary">
-                                    <input type="radio" name="options" ng-model="c.filterConditions.status" value="active" autocomplete="off">Active
-                                </label>
-                                <label class="btn btn-primary">
-                                    <input type="radio" name="options" ng-model="c.filterConditions.status" value="done" autocomplete="off">Done
-                                </label>
-                            </div>
-                        </div>
-                    </form>
-                </header>
-                <todo-list class="list-group">
-                    <todo-item ng-repeat="todoItem in c.todoItems | todoFilter:c.filterConditions track by $index"></todo-item>
-                </todo-list>
-                <footer class="panel-footer">
-                    <span class="badge">{{c.remaining()}} / {{c.todoItems.length}}</span> Items left
-                </footer>
-            </section>
-        </div>
+                </div>
+                <div class="input-group">
+                    <input type="checkbox" ng-model="checkAll" />
+                    Check All Items
+                </div>
+            </header>
+            <todo-list class="list-group">
+                <todo-item ng-repeat="todoItem in c.todoItems | todoFilter:c.filterConditions track by $index"></todo-item>
+            </todo-list>
+            <footer class="panel-footer">
+                <span class="badge">{{c.remaining()}} / {{c.todoItems.length}}</span> Items Left
+                <div class="input-group input-group-sm footer-btn-group">
+                    <div class="input-group-btn" data-toggle="buttons">
+                        <button class="btn btn-danger" ng-click="c.deleteDoneItems()">Delete Done Items</button>
+                    </div>
+                </div>
+            </footer>
+        </section>
     </div>
+    <script type="text/javascript" src="bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script>
+        $('.datepicker').datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            clearBtn: true
+        })
+    </script>
     <script type="text/javascript" src="dist/scripts/app.js"></script>
 </body>
 

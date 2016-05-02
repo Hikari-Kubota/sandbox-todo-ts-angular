@@ -44,6 +44,7 @@ export class TodoController {
     public priority: Priority;
     static $inject = ['$scope'];
     public date: Date;
+    public checkAll: boolean;
 
     constructor(private $scope: ng.IScope) {
 
@@ -90,6 +91,18 @@ export class TodoController {
     public getId() {
         let id = parseInt(localStorage["maxId"]);
         return ++id;
+    }
+
+    public checkAllItems() {
+        let done: boolean;
+        if (this.checkAll){
+            done = true;
+        } else {
+            done = false;
+        }
+        for (let value of this.todoItems){
+            value.done = done;
+        }
     }
 
     public addTodoItem(msg: string, pr: Priority) {
@@ -202,7 +215,7 @@ export class TodoItemDirective implements ng.IDirective {
         <div class="list-group-item">
             <div class="list-group-item-inner done-{{todoItem.done}}" ng-hide="isEditMode">
                 <div class="item-wrapper">
-                    <input type="checkbox" ng-model="todoItem.done" ng-checked="checkAll"/>
+                    <input type="checkbox" ng-model="todoItem.done" ng-checked="c.checkAll"/>
                 </div>
                 <label ng-dblclick="startEdit(todoItem.id)">{{todoItem.message}}</label>
                 <span class="label btn-{{todoItem.priority.color}} label-done-{{todoItem.done}}" ng-dblclick="startEdit(todoItem.id)">{{todoItem.priority.name}}</span>

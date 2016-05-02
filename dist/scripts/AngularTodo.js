@@ -61,6 +61,19 @@ var TodoController = (function () {
         var id = parseInt(localStorage["maxId"]);
         return ++id;
     };
+    TodoController.prototype.checkAllItems = function () {
+        var done;
+        if (this.checkAll) {
+            done = true;
+        }
+        else {
+            done = false;
+        }
+        for (var _i = 0, _a = this.todoItems; _i < _a.length; _i++) {
+            var value = _a[_i];
+            value.done = done;
+        }
+    };
     TodoController.prototype.addTodoItem = function (msg, pr) {
         var maxId = this.getId();
         this.todoItems.push({
@@ -158,7 +171,7 @@ var TodoItemDirective = (function () {
         this.restrict = 'E';
         this.replace = true;
         this.require = '^todoList';
-        this.template = "\n        <div class=\"list-group-item\">\n            <div class=\"list-group-item-inner done-{{todoItem.done}}\" ng-hide=\"isEditMode\">\n                <div class=\"item-wrapper\">\n                    <input type=\"checkbox\" ng-model=\"todoItem.done\" ng-checked=\"checkAll\"/>\n                </div>\n                <label ng-dblclick=\"startEdit(todoItem.id)\">{{todoItem.message}}</label>\n                <span class=\"label btn-{{todoItem.priority.color}} label-done-{{todoItem.done}}\" ng-dblclick=\"startEdit(todoItem.id)\">{{todoItem.priority.name}}</span>\n                <div class=\"item-wrapper\">\n                    <button class=\"btn btn-danger btn-sm\" ng-click=\"removeTodoItem(todoItem.id)\">&times;</button>\n                </div>\n            </div>\n            <div ng-show=\"isEditMode\">\n                <form name=\"todoEditForm\" novalidate>\n                    <div class=\"input-group input-group-lg\">\n                        <input type=\"text\" name=\"todoEdit\" class=\"form-control\" ng-model=\"todoItem.message\" ng-blur=\"updateTodoItem($event, todoItem)\" ng-keyup=\"updateTodoItem($event, todoItem)\" placeholder=\"ToDo ...\" />\n                        <div class=\"input-group-addon\">\n                            <select class=\"btn-{{todoItem.priority.color}} select-box\" ng-model=\"todoItem.priority\" ng-options=\"pr.name for pr in c.priorities\" novalidate=\"\"></select>\n                        </div>\n                        <span class=\"input-group-btn\">\n                            <button class=\"btn btn-primary\" ng-click=\"updateTodoItem($event, todoItem)\">Update</button>\n                        </span>\n                    </div>\n                </form>\n            </div>\n        </div>\n        ";
+        this.template = "\n        <div class=\"list-group-item\">\n            <div class=\"list-group-item-inner done-{{todoItem.done}}\" ng-hide=\"isEditMode\">\n                <div class=\"item-wrapper\">\n                    <input type=\"checkbox\" ng-model=\"todoItem.done\" ng-checked=\"c.checkAll\"/>\n                </div>\n                <label ng-dblclick=\"startEdit(todoItem.id)\">{{todoItem.message}}</label>\n                <span class=\"label btn-{{todoItem.priority.color}} label-done-{{todoItem.done}}\" ng-dblclick=\"startEdit(todoItem.id)\">{{todoItem.priority.name}}</span>\n                <div class=\"item-wrapper\">\n                    <button class=\"btn btn-danger btn-sm\" ng-click=\"removeTodoItem(todoItem.id)\">&times;</button>\n                </div>\n            </div>\n            <div ng-show=\"isEditMode\">\n                <form name=\"todoEditForm\" novalidate>\n                    <div class=\"input-group input-group-lg\">\n                        <input type=\"text\" name=\"todoEdit\" class=\"form-control\" ng-model=\"todoItem.message\" ng-blur=\"updateTodoItem($event, todoItem)\" ng-keyup=\"updateTodoItem($event, todoItem)\" placeholder=\"ToDo ...\" />\n                        <div class=\"input-group-addon\">\n                            <select class=\"btn-{{todoItem.priority.color}} select-box\" ng-model=\"todoItem.priority\" ng-options=\"pr.name for pr in c.priorities\" novalidate=\"\"></select>\n                        </div>\n                        <span class=\"input-group-btn\">\n                            <button class=\"btn btn-primary\" ng-click=\"updateTodoItem($event, todoItem)\">Update</button>\n                        </span>\n                    </div>\n                </form>\n            </div>\n        </div>\n        ";
         this.link = function (scope, element, attrs, todoController) {
             scope.isEditMode = false;
             scope.startEdit = function (id) {

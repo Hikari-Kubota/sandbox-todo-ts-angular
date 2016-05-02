@@ -34,7 +34,7 @@
                 </div>
                 <div class="todo-option">
                     Options:
-                    <input type="text" class="datepicker date-box" ng-model="c.date" placeholder="Deadline" ng-disabled="todoForm.todoInput.$error.required">
+                    <input type="text" class="datepicker date-box" ng-model="c.date" placeholder="Deadline ..." ng-disabled="todoForm.todoInput.$error.required">
                     <select class="btn-{{c.priority.color}}" ng-model="c.priority" ng-options="pr.name for pr in c.priorities" novalidate="" ng-disabled="todoForm.todoInput.$error.required"></select>
                 </div>
                 <div class="filter" ng-show="filterSwitch">
@@ -64,7 +64,7 @@
                     </form>
                 </div>
                 <div class="input-group">
-                    <input type="checkbox" ng-model="checkAll" />
+                    <input type="checkbox" ng-model="c.checkAll" ng-click="c.checkAllItems()" />
                     Check All Items
                 </div>
             </header>

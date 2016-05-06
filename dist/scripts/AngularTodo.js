@@ -73,8 +73,6 @@ var TodoController = (function () {
         }
         var todoFilter = new TodoFilter();
         filteredTodo = todoFilter.filter(this.todoItems, this.filterConditions);
-        console.log(this.filterConditions);
-        console.log(filteredTodo);
         for (var _i = 0, filteredTodo_1 = filteredTodo; _i < filteredTodo_1.length; _i++) {
             var value = filteredTodo_1[_i];
             value.done = done;
@@ -180,7 +178,7 @@ var TodoItemDirective = (function () {
         this.restrict = 'E';
         this.replace = true;
         this.require = '^todoList';
-        this.template = "\n        <div class=\"list-group-item\">\n            <div class=\"list-group-item-inner done-{{todoItem.done}}\" ng-hide=\"isEditMode\">\n                <div class=\"item-wrapper\">\n                    <input type=\"checkbox\" ng-model=\"todoItem.done\"/>\n                </div>\n                <label class=\"todo-label\" ng-dblclick=\"startEdit(todoItem.id)\">{{todoItem.message}}</label>\n                <label class=\"deadline-label\" ng-dblclick=\"startEdit(todoItem.id)\">{{todoItem.deadline}}</label>\n                <span class=\"label btn-{{todoItem.priority.color}} label-done-{{todoItem.done}} importance-label\" ng-dblclick=\"startEdit(todoItem.id)\">{{todoItem.priority.name}}</span>\n                <div class=\"item-wrapper\">\n                    <button class=\"btn btn-danger btn-sm\" ng-click=\"removeTodoItem(todoItem.id)\">&times;</button>\n                </div>\n            </div>\n            <div ng-show=\"isEditMode\">\n                <form name=\"todoEditForm\" novalidate>\n                    <div class=\"input-group input-group-lg\">\n                        <input type=\"text\" name=\"todoEdit\" class=\"form-control\" ng-model=\"todoItem.message\" ng-blur=\"updateTodoItem($event, todoItem)\" ng-keyup=\"updateTodoItem($event, todoItem)\" placeholder=\"ToDo ...\" />\n                        <div class=\"input-group-addon\">\n                            <input type=\"text\" class=\"datepicker date-box\" ng-model=\"todoItem.deadline\" placeholder=\"Deadline ...\">\n                            <script>\n                                $('.datepicker').datepicker({\n                                    autoclose: true,\n                                    todayHighlight: true,\n                                    clearBtn: true\n                                })\n                            </script>\n                            <select class=\"btn-{{todoItem.priority.color}} select-box\" ng-model=\"todoItem.priority\" ng-options=\"pr.name for pr in c.priorities\" novalidate=\"\"></select>\n                        </div>\n                        <span class=\"input-group-btn\">\n                            <button class=\"btn btn-primary\" ng-click=\"updateTodoItem($event, todoItem)\">Update</button>\n                        </span>\n                    </div>\n                </form>\n            </div>\n        </div>\n        ";
+        this.template = "\n        <div class=\"list-group-item\">\n            <div class=\"list-group-item-inner done-{{todoItem.done}}\" ng-hide=\"isEditMode\">\n                <div class=\"item-wrapper\">\n                    <input type=\"checkbox\" ng-model=\"todoItem.done\"/>\n                </div>\n                <label class=\"todo-label\" ng-dblclick=\"startEdit(todoItem.id)\">{{todoItem.message}}</label>\n                <label class=\"deadline-label deadline-color-{{getDeadlineColor(todoItem)}}\" ng-dblclick=\"startEdit(todoItem.id)\">\n                    {{todoItem.deadline}}\n                    <span class=\"glyphicon glyphicon-warning-sign\" ng-show=\"getDeadlineColor(todoItem)=='danger'\"></span>\n                </label>\n                <span class=\"label btn-{{todoItem.priority.color}} label-done-{{todoItem.done}} importance-label\" ng-dblclick=\"startEdit(todoItem.id)\">{{todoItem.priority.name}}</span>\n                <div class=\"item-wrapper\">\n                    <button class=\"btn btn-danger btn-sm\" ng-click=\"removeTodoItem(todoItem.id)\">&times;</button>\n                </div>\n            </div>\n            <div ng-show=\"isEditMode\">\n                <form name=\"todoEditForm\" novalidate>\n                    <div class=\"input-group input-group-lg\">\n                        <input type=\"text\" name=\"todoEdit\" class=\"form-control\" ng-model=\"todoItem.message\" ng-blur=\"updateTodoItem($event, todoItem)\" ng-keyup=\"updateTodoItem($event, todoItem)\" placeholder=\"ToDo ...\" />\n                        <span class=\"input-group-btn\">\n                            <button class=\"btn btn-primary\" ng-click=\"updateTodoItem($event, todoItem)\">\n                                <span class=\"glyphicon glyphicon-refresh\"></span>\n                            </button>\n                        </span>\n                    </div>\n                    <div class=\"todo-option\">\n                        <input type=\"text\" class=\"datepicker date-box\" ng-model=\"todoItem.deadline\" placeholder=\"Deadline ...\">\n                        <span class=\"glyphicon glyphicon-calendar\"></span>\n                        <script>\n                            $('.datepicker').datepicker({\n                                autoclose: true,\n                                todayHighlight: true,\n                                clearBtn: true\n                            })\n                        </script>\n                        <select class=\"btn-{{todoItem.priority.color}} select-box\" ng-model=\"todoItem.priority\" ng-options=\"pr.name for pr in c.priorities\" novalidate=\"\"></select>\n                        <span class=\"glyphicon glyphicon-exclamation-sign\"></span>\n                    </div>\n                </form>\n            </div>\n        </div>\n        ";
         this.link = function (scope, element, attrs, todoController) {
             scope.isEditMode = false;
             scope.startEdit = function (id) {
@@ -204,6 +202,29 @@ var TodoItemDirective = (function () {
             };
             scope.removeTodoItem = function (id) {
                 todoController.removeTodoItem(id);
+            };
+            scope.getDeadlineColor = function (todoItem) {
+                var deadline = todoItem.deadline;
+                if (deadline == "")
+                    return;
+                if (todoItem.done == true)
+                    return "gray";
+                var dead = new Date(deadline).getTime();
+                var today = new Date().getTime();
+                var msDiff = dead - today;
+                var daysDiff = Math.floor(msDiff / (1000 * 60 * 60 * 24)) + 1;
+                if (daysDiff < 0) {
+                    return "danger";
+                }
+                else if (daysDiff == 0) {
+                    return "warning";
+                }
+                else if (daysDiff < 3) {
+                    return "info";
+                }
+                else {
+                    return "";
+                }
             };
         };
     }

@@ -112,10 +112,30 @@ body {
 }
 
 .deadline-label {
-    width: 10%;
+    width: 20%;
 }
 
 .importance-label {
     width: 10%;
     height: 28px;
+}
+
+.deadline-color-info {
+    color: #428bca;
+
+}
+
+.deadline-color-warning {
+    color: #f0ad4e;
+
+}
+
+.deadline-color-danger {
+    color: #d9534f;
+
+}
+
+.deadline-color-gray {
+    color: gray;
+
 }

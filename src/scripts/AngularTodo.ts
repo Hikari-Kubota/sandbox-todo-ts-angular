@@ -4,6 +4,7 @@ export interface ITodoItemDirectiveScope extends ng.IScope {
     updateTodoItem: Function;
     cancelEdit: Function;
     removeTodoItem: Function;
+    getDeadlineColor: Function;
 }
 
 export class TodoItem {
@@ -114,12 +115,10 @@ export class TodoController {
 
         filteredTodo = todoFilter.filter(this.todoItems, this.filterConditions);
 
-        console.log(this.filterConditions);
-        console.log(filteredTodo);
-
         for (let value of filteredTodo){
             value.done = done;
         }
+
     }
 
     public addTodoItem(msg: string, pr: Priority, date: string) {
@@ -200,6 +199,7 @@ export class TodoController {
         }
 
     }
+
 }
 
 export class TodoListDirective implements ng.IDirective {
@@ -241,7 +241,10 @@ export class TodoItemDirective implements ng.IDirective {
                     <input type="checkbox" ng-model="todoItem.done"/>
                 </div>
                 <label class="todo-label" ng-dblclick="startEdit(todoItem.id)">{{todoItem.message}}</label>
-                <label class="deadline-label" ng-dblclick="startEdit(todoItem.id)">{{todoItem.deadline}}</label>
+                <label class="deadline-label deadline-color-{{getDeadlineColor(todoItem)}}" ng-dblclick="startEdit(todoItem.id)">
+                    {{todoItem.deadline}}
+                    <span class="glyphicon glyphicon-warning-sign" ng-show="getDeadlineColor(todoItem)=='danger'"></span>
+                </label>
                 <span class="label btn-{{todoItem.priority.color}} label-done-{{todoItem.done}} importance-label" ng-dblclick="startEdit(todoItem.id)">{{todoItem.priority.name}}</span>
                 <div class="item-wrapper">
                     <button class="btn btn-danger btn-sm" ng-click="removeTodoItem(todoItem.id)">&times;</button>
@@ -251,20 +254,24 @@ export class TodoItemDirective implements ng.IDirective {
                 <form name="todoEditForm" novalidate>
                     <div class="input-group input-group-lg">
                         <input type="text" name="todoEdit" class="form-control" ng-model="todoItem.message" ng-blur="updateTodoItem($event, todoItem)" ng-keyup="updateTodoItem($event, todoItem)" placeholder="ToDo ..." />
-                        <div class="input-group-addon">
-                            <input type="text" class="datepicker date-box" ng-model="todoItem.deadline" placeholder="Deadline ...">
-                            <script>
-                                $('.datepicker').datepicker({
-                                    autoclose: true,
-                                    todayHighlight: true,
-                                    clearBtn: true
-                                })
-                            </script>
-                            <select class="btn-{{todoItem.priority.color}} select-box" ng-model="todoItem.priority" ng-options="pr.name for pr in c.priorities" novalidate=""></select>
-                        </div>
                         <span class="input-group-btn">
-                            <button class="btn btn-primary" ng-click="updateTodoItem($event, todoItem)">Update</button>
+                            <button class="btn btn-primary" ng-click="updateTodoItem($event, todoItem)">
+                                <span class="glyphicon glyphicon-refresh"></span>
+                            </button>
                         </span>
+                    </div>
+                    <div class="todo-option">
+                        <input type="text" class="datepicker date-box" ng-model="todoItem.deadline" placeholder="Deadline ...">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                        <script>
+                            $('.datepicker').datepicker({
+                                autoclose: true,
+                                todayHighlight: true,
+                                clearBtn: true
+                            })
+                        </script>
+                        <select class="btn-{{todoItem.priority.color}} select-box" ng-model="todoItem.priority" ng-options="pr.name for pr in c.priorities" novalidate=""></select>
+                        <span class="glyphicon glyphicon-exclamation-sign"></span>
                     </div>
                 </form>
             </div>
@@ -297,6 +304,28 @@ export class TodoItemDirective implements ng.IDirective {
             scope.removeTodoItem = (id) => {
                 todoController.removeTodoItem(id);
             };
+            // 期日に色付け
+            scope.getDeadlineColor = (todoItem: TodoItem) => {
+                let deadline = todoItem.deadline;
+                if (deadline == "") return;
+                if (todoItem.done == true) return "gray";
+                let dead = new Date(deadline).getTime();
+                let today = new Date().getTime();
+
+                let msDiff = dead - today;
+                let daysDiff = Math.floor(msDiff / (1000 * 60 * 60 * 24)) + 1;
+
+                if (daysDiff < 0) {
+                    return "danger";
+                } else if (daysDiff == 0) {
+                    return "warning";
+                } else if (daysDiff < 3) {
+                    return "info";
+                } else {
+                    return "";
+                }
+
+            }
         }
     }
     public static Factory(): ng.IDirectiveFactory {

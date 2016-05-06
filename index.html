@@ -23,14 +23,16 @@
                     <div class="input-group input-group-lg">
                         <input type="text" name="todoInput" class="form-control" ng-model="c.message" placeholder="ToDo ..." required />
                         <span class="input-group-btn">
-                            <button class="btn btn-primary" ng-click="c.addTodoItem(c.message, c.priority, c.date)" ng-disabled="todoForm.todoInput.$error.required">Add</button>
+                            <button class="btn btn-primary" ng-click="c.addTodoItem(c.message, c.priority, c.date)" ng-disabled="todoForm.todoInput.$error.required">
+                                <span class="glyphicon glyphicon-plus"></span>
+                            </button>
                         </span>
                     </div>
                 </form>
                 <div class="filter-switch" data-toggle="buttons">
                     <label class="btn btn-default" ng-class="{active: filterSwitch}">
                         <input type="checkbox" ng-model="filterSwitch" />
-                        <span class="glyphicon glyphicon-filter"></span>
+                        <span class="glyphicon glyphicon-search"></span>
                     </label>
                 </div>
                 <div class="todo-option">
@@ -72,8 +74,8 @@
                     </form>
                 </div>
                 <div class="input-group">
+                    <span class="glyphicon glyphicon-ok-sign"></span><br />
                     <input type="checkbox" ng-model="c.checkAll" ng-click="c.checkAllItems()" />
-                    Check All
                 </div>
             </header>
             <todo-list class="list-group">

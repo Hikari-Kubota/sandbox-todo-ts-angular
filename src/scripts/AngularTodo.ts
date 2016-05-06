@@ -19,6 +19,8 @@ export class FilterConditions {
     word: string;
     priority: Priority;
     status: string;
+    start: string;
+    end: string;
 }
 
 export class Priority {
@@ -53,6 +55,9 @@ export class TodoController {
         this.initLocalStorage();
 
         this.todoItems = this.loadTodoItems();
+
+        // this.todoItems = []; // ToDoリストをリセット
+
         // 優先度メニューの値をセット
         this.priorities = [
             //{ level: 0, name: "Now!", color: "danger" },
@@ -66,7 +71,9 @@ export class TodoController {
         // フィルターの設定
         this.filterPriorities = [{level: -1, name: "Importance", color: "default"}];
         this.filterPriorities = this.filterPriorities.concat(this.priorities);
-        this.filterConditions = {word: "", priority: this.filterPriorities[0], status: ""};
+        this.filterConditions = {word: "", priority: this.filterPriorities[0], status: "", start: "", end: ""};
+
+        this.date = "";
 
         // deep watch
         $scope.$watch(() => { return this.todoItems; },
@@ -96,12 +103,21 @@ export class TodoController {
 
     public checkAllItems() {
         let done: boolean;
+        let filteredTodo = []
         if (this.checkAll){
             done = true;
         } else {
             done = false;
         }
-        for (let value of this.todoItems){
+
+        let todoFilter = new TodoFilter();
+
+        filteredTodo = todoFilter.filter(this.todoItems, this.filterConditions);
+
+        console.log(this.filterConditions);
+        console.log(filteredTodo);
+
+        for (let value of filteredTodo){
             value.done = done;
         }
     }
@@ -155,7 +171,7 @@ export class TodoController {
     }
 
     public resetFilter() {
-        this.filterConditions = {word: "", priority: this.filterPriorities[0], status: ""};
+        this.filterConditions = {word: "", priority: this.filterPriorities[0], status: "", start: "", end: ""};
     }
 
     public deleteDoneItems() {
@@ -222,11 +238,11 @@ export class TodoItemDirective implements ng.IDirective {
         <div class="list-group-item">
             <div class="list-group-item-inner done-{{todoItem.done}}" ng-hide="isEditMode">
                 <div class="item-wrapper">
-                    <input type="checkbox" ng-model="todoItem.done" ng-checked="c.checkAll"/>
+                    <input type="checkbox" ng-model="todoItem.done"/>
                 </div>
-                <label ng-dblclick="startEdit(todoItem.id)">{{todoItem.message}}</label>
-                <label ng-dblclick="startEdit(todoItem.id)">{{todoItem.deadline}}</label>
-                <span class="label btn-{{todoItem.priority.color}} label-done-{{todoItem.done}}" ng-dblclick="startEdit(todoItem.id)">{{todoItem.priority.name}}</span>
+                <label class="todo-label" ng-dblclick="startEdit(todoItem.id)">{{todoItem.message}}</label>
+                <label class="deadline-label" ng-dblclick="startEdit(todoItem.id)">{{todoItem.deadline}}</label>
+                <span class="label btn-{{todoItem.priority.color}} label-done-{{todoItem.done}} importance-label" ng-dblclick="startEdit(todoItem.id)">{{todoItem.priority.name}}</span>
                 <div class="item-wrapper">
                     <button class="btn btn-danger btn-sm" ng-click="removeTodoItem(todoItem.id)">&times;</button>
                 </div>
@@ -236,6 +252,14 @@ export class TodoItemDirective implements ng.IDirective {
                     <div class="input-group input-group-lg">
                         <input type="text" name="todoEdit" class="form-control" ng-model="todoItem.message" ng-blur="updateTodoItem($event, todoItem)" ng-keyup="updateTodoItem($event, todoItem)" placeholder="ToDo ..." />
                         <div class="input-group-addon">
+                            <input type="text" class="datepicker date-box" ng-model="todoItem.deadline" placeholder="Deadline ...">
+                            <script>
+                                $('.datepicker').datepicker({
+                                    autoclose: true,
+                                    todayHighlight: true,
+                                    clearBtn: true
+                                })
+                            </script>
                             <select class="btn-{{todoItem.priority.color}} select-box" ng-model="todoItem.priority" ng-options="pr.name for pr in c.priorities" novalidate=""></select>
                         </div>
                         <span class="input-group-btn">
@@ -306,6 +330,7 @@ export class TodoFocusDirective implements ng.IDirective {
 }
 
 export class TodoFilter {
+
     constructor() { }
 
     public filter(todoItems: TodoItem[], fc: FilterConditions): TodoItem[] {
@@ -313,6 +338,7 @@ export class TodoFilter {
             let wordResult = true;
             let priorityResult = true;
             let statusResult = true;
+            let periodResult = true;
 
             // word filter
             if (todo.message.indexOf(fc.word)==-1) wordResult = false;
@@ -338,7 +364,18 @@ export class TodoFilter {
             }
             if (fc.status == "" || fc.status == "all") statusResult = true;
 
-            return wordResult && priorityResult && statusResult;
+            // period filter
+            let start = fc.start != "" ? new Date(fc.start).getTime() : 0;
+            let end = fc.end != "" ? new Date(fc.end).getTime() : 9999999999999;
+            let deadline = todo.deadline != "" ? new Date(todo.deadline).getTime() : 1;
+
+            if (deadline <= end && deadline >= start || deadline == 1) {
+                periodResult = true;
+            } else {
+                periodResult = false;
+            }
+
+            return wordResult && priorityResult && statusResult && periodResult;;
         });
     }
 }

@@ -28,19 +28,27 @@
                     </div>
                 </form>
                 <div class="filter-switch" data-toggle="buttons">
-                    <label class="btn btn-primary" ng-class="{active: filterSwitch}">
-                        <input type="checkbox" ng-model="filterSwitch" />Search Filter {{filterSwitch ? 'OFF' : 'ON'}}
+                    <label class="btn btn-default" ng-class="{active: filterSwitch}">
+                        <input type="checkbox" ng-model="filterSwitch" />
+                        <span class="glyphicon glyphicon-filter"></span>
                     </label>
                 </div>
                 <div class="todo-option">
-                    Options:
                     <input type="text" class="datepicker date-box" ng-model="c.date" placeholder="Deadline ..." ng-disabled="todoForm.todoInput.$error.required">
+                    <span class="glyphicon glyphicon-calendar"></span>
                     <select class="btn-{{c.priority.color}}" ng-model="c.priority" ng-options="pr.name for pr in c.priorities" novalidate="" ng-disabled="todoForm.todoInput.$error.required"></select>
+                    <span class="glyphicon glyphicon-exclamation-sign"></span>
                 </div>
                 <div class="filter" ng-show="filterSwitch">
                     <form name="filterForm" novalidate>
                         <div class="input-group">
                             <input type="text" name="searchWordInput" class="form-control" ng-model="c.filterConditions.word" placeholder="Search ..." />
+                        </div>
+                        <div class="input-group period-error-{{!(c.filterConditions.start <= c.filterConditions.end || c.filterConditions.end == '')}}">
+                            <input type="text" class="datepicker date-box" ng-model="c.filterConditions.start" placeholder="Start Day ...">
+                            <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+                            <input type="text" class="datepicker date-box" ng-model="c.filterConditions.end" placeholder="End Day ...">
+                            <span ng-show="!(c.filterConditions.start <= c.filterConditions.end || c.filterConditions.end == '')">Invarid Period!</span>
                         </div>
                         <div class="input-group">
                             <div class="input-group-btn" data-toggle="buttons">
@@ -65,14 +73,15 @@
                 </div>
                 <div class="input-group">
                     <input type="checkbox" ng-model="c.checkAll" ng-click="c.checkAllItems()" />
-                    Check All Items
+                    Check All
                 </div>
             </header>
             <todo-list class="list-group">
                 <todo-item ng-repeat="todoItem in c.todoItems | todoFilter:c.filterConditions track by $index"></todo-item>
             </todo-list>
             <footer class="panel-footer">
-                <span class="badge">{{c.remaining()}} / {{c.todoItems.length}}</span> Items Left
+                <span class="glyphicon glyphicon-ok"></span>
+                <span class="badge">{{c.remaining()}} / {{c.todoItems.length}}</span>
                 <div class="input-group input-group-sm footer-btn-group">
                     <div class="input-group-btn" data-toggle="buttons">
                         <button class="btn btn-danger" ng-click="c.deleteDoneItems()">Delete Done Items</button>

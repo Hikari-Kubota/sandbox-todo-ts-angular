@@ -287,7 +287,7 @@ export class TodoItemDirective implements ng.IDirective {
             // 編集終了
             scope.updateTodoItem = ($event, todoItem) => {
                 if ($event.type === 'keyup') {
-                    if ($event.which !== 13) return;
+                    return;
                 }
                 if (todoItem.message == "") {
                     scope.removeTodoItem(todoItem.id);

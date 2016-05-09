@@ -186,8 +186,7 @@ var TodoItemDirective = (function () {
             };
             scope.updateTodoItem = function ($event, todoItem) {
                 if ($event.type === 'keyup') {
-                    if ($event.which !== 13)
-                        return;
+                    return;
                 }
                 if (todoItem.message == "") {
                     scope.removeTodoItem(todoItem.id);
